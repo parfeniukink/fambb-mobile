@@ -3,6 +3,19 @@ import 'package:json_annotation/json_annotation.dart';
 part 'finances.g.dart';
 
 @JsonSerializable()
+class CurrencyResults {
+  final List<Currency> result;
+
+  CurrencyResults({
+    required this.result,
+  });
+
+  factory CurrencyResults.fromJson(Map<String, dynamic> json) =>
+      _$CurrencyResultsFromJson(json);
+  Map<String, dynamic> toJson() => _$CurrencyResultsToJson(this);
+}
+
+@JsonSerializable()
 class Currency {
   final int id;
   final String name;

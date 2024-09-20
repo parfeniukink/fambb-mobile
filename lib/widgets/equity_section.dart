@@ -58,8 +58,10 @@ class _EquitySectionState extends State<EquitySection> {
                 child: Text(
                   "${item.amount.toStringAsFixed(2)}${item.currency.sign}",
                   style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: CupertinoColors.white),
+                    fontWeight: FontWeight.w700,
+                    color: CupertinoColors.white,
+                    fontStyle: FontStyle.italic,
+                  ),
                 ),
               );
             }).toList());

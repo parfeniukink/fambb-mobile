@@ -4,11 +4,16 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:fambb_mobile/data/equity.dart';
 import 'package:fambb_mobile/data/transactions.dart';
+import 'package:fambb_mobile/data/finances.dart';
 
 const String baseUrl = "http://localhost:8000";
 const String equityPath = "/analytics/equity";
 const String transactionsPath = "/analytics/transactions";
 const String lastTransactionsPath = "/analytics/transactions/last";
+const String transactionsCurrenciesPath = "/analytics/transactions/currencies";
+const String transactionsCostCategoriesPath =
+    "/analytics/transactions/costs/categories";
+const String transactionsCostPath = "/analytics/transactions/costs";
 
 class ApiService {
   // Get all the equity data
@@ -30,6 +35,46 @@ class ApiService {
     return null;
   }
 
+  // Fetch currencies
+  // -----------------------------------------
+  Future<List<Currency>?> fetchCurrencies() async {
+    try {
+      var url = Uri.parse(baseUrl + transactionsCurrenciesPath);
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        var currencyResults =
+            CurrencyResults.fromJson(json.decode(response.body));
+        return currencyResults.result;
+      } else {
+        log('Failed to load currencies');
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
+  }
+
+  // Fetch currencies
+  // -----------------------------------------
+  Future<List<CostCategory>?> fetchCostCategories() async {
+    try {
+      var url = Uri.parse(baseUrl + transactionsCostCategoriesPath);
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        var costCategoryResults =
+            CostCategoryResults.fromJson(json.decode(response.body));
+        return costCategoryResults.result;
+      } else {
+        log('Failed to load cost categories');
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
+  }
+
   // Get last transactions
   // -----------------------------------------
   Future<List<Transaction>?> fetchTransactions([int? currency]) async {
@@ -42,7 +87,6 @@ class ApiService {
         url = Uri.parse("$baseUrl$transactionsPath?currency=$currency");
       }
       var response = await http.get(url);
-
 
       if (response.statusCode == 200) {
         TransactionResults transactionResults =

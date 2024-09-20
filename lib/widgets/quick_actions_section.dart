@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:fambb_mobile/pages/forms.dart';
 
 class QuickActionsSection extends StatefulWidget {
   const QuickActionsSection({super.key});
@@ -8,6 +9,11 @@ class QuickActionsSection extends StatefulWidget {
 }
 
 class _QuickActionsSectionState extends State<QuickActionsSection> {
+  _goFormAddCost(BuildContext context) {
+    Navigator.push(context,
+        CupertinoPageRoute(builder: (context) => const AddCostFormPage()));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -31,7 +37,9 @@ class _QuickActionsSectionState extends State<QuickActionsSection> {
                       fontWeight: FontWeight.w900,
                       color: CupertinoColors.white),
                 ),
-                onPressed: () {}),
+                onPressed: () {
+                  _goFormAddCost(context);
+                }),
           ],
         ),
         const SizedBox(height: 20),

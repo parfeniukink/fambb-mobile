@@ -15,8 +15,7 @@ class _LastTransactionsSectionState extends State<LastTransactionsSection> {
   late List<Transaction> _transactions;
 
   Future<void> getLastTransactions() async {
-    ApiService api = ApiService();
-    List<Transaction>? transactions = await api.fetchTransactions();
+    List<Transaction>? transactions = await ApiService().fetchTransactions();
 
     if (transactions != null) {
       setState(() {

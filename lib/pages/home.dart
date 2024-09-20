@@ -23,17 +23,17 @@ class _HomePageState extends State<HomePage> {
             children: [
               Section(
                 title: "🏦  Equity",
-                border: 5,
+                border: 3,
                 child: EquitySection(),
               ),
               Section(
                 title: "📝  Last Transactions",
-                border: 5,
+                border: 3,
                 child: LastTransactionsSection(),
               ),
               Section(
                 title: "🏃  Quick Actions",
-                border: 5,
+                border: 3,
                 child: QuickActionsSection(),
               ),
             ],

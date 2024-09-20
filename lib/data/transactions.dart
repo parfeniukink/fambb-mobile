@@ -35,3 +35,35 @@ class Transaction {
       _$TransactionFromJson(json);
   Map<String, dynamic> toJson() => _$TransactionToJson(this);
 }
+
+@JsonSerializable()
+class CostCategoryResults {
+  final List<CostCategory> result;
+
+  CostCategoryResults({
+    required this.result,
+  });
+
+  factory CostCategoryResults.fromJson(Map<String, dynamic> json) =>
+      _$CostCategoryResultsFromJson(json);
+  Map<String, dynamic> toJson() => _$CostCategoryResultsToJson(this);
+}
+
+@JsonSerializable()
+class CostCategory {
+  final String name;
+  final int value;
+  final Currency currency;
+  final String operation; // income, cost, exchange
+
+  CostCategory({
+    required this.name,
+    required this.value,
+    required this.currency,
+    required this.operation,
+  });
+
+  factory CostCategory.fromJson(Map<String, dynamic> json) =>
+      _$CostCategoryFromJson(json);
+  Map<String, dynamic> toJson() => _$CostCategoryToJson(this);
+}
