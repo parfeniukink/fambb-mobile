@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'finances.dart';
+import 'currency.dart';
 
 part 'equity.g.dart';
 

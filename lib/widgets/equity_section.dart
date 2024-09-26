@@ -3,7 +3,7 @@ import 'package:fambb_mobile/pages/last_transactions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fambb_mobile/data/equity.dart';
 
-import 'package:fambb_mobile/data/finances.dart';
+import 'package:fambb_mobile/data/currency.dart';
 
 class EquitySection extends StatefulWidget {
   const EquitySection({super.key});

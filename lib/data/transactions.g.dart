@@ -47,16 +47,12 @@ Map<String, dynamic> _$CostCategoryResultsToJson(
     };
 
 CostCategory _$CostCategoryFromJson(Map<String, dynamic> json) => CostCategory(
+      id: (json['id'] as num).toInt(),
       name: json['name'] as String,
-      value: (json['value'] as num).toInt(),
-      currency: Currency.fromJson(json['currency'] as Map<String, dynamic>),
-      operation: json['operation'] as String,
     );
 
 Map<String, dynamic> _$CostCategoryToJson(CostCategory instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'name': instance.name,
-      'value': instance.value,
-      'currency': instance.currency,
-      'operation': instance.operation,
     };

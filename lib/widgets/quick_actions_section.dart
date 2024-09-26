@@ -1,8 +1,20 @@
 import 'package:flutter/cupertino.dart';
-import 'package:fambb_mobile/pages/forms.dart';
+import 'package:fambb_mobile/pages/add_cost.dart';
+import 'package:fambb_mobile/data/user.dart';
+import 'package:fambb_mobile/data/currency.dart';
+import 'package:fambb_mobile/data/transactions.dart';
 
 class QuickActionsSection extends StatefulWidget {
-  const QuickActionsSection({super.key});
+  final User user;
+  final List<Currency> currencies;
+  final List<CostCategory> costCategories;
+
+  const QuickActionsSection({
+    super.key,
+    required this.user,
+    required this.currencies,
+    required this.costCategories,
+  });
 
   @override
   State<QuickActionsSection> createState() => _QuickActionsSectionState();
@@ -10,8 +22,14 @@ class QuickActionsSection extends StatefulWidget {
 
 class _QuickActionsSectionState extends State<QuickActionsSection> {
   _goFormAddCost(BuildContext context) {
-    Navigator.push(context,
-        CupertinoPageRoute(builder: (context) => const AddCostFormPage()));
+    Navigator.push(
+        context,
+        CupertinoPageRoute(
+            builder: (context) => AddCostPage(
+                  user: widget.user,
+                  currencies: widget.currencies,
+                  costCategories: widget.costCategories,
+                )));
   }
 
   @override

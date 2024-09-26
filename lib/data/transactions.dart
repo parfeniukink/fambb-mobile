@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'finances.dart';
+import 'currency.dart';
 
 part 'transactions.g.dart';
 
@@ -51,16 +51,12 @@ class CostCategoryResults {
 
 @JsonSerializable()
 class CostCategory {
+  final int id;
   final String name;
-  final int value;
-  final Currency currency;
-  final String operation; // income, cost, exchange
 
   CostCategory({
+    required this.id,
     required this.name,
-    required this.value,
-    required this.currency,
-    required this.operation,
   });
 
   factory CostCategory.fromJson(Map<String, dynamic> json) =>

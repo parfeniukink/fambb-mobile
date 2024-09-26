@@ -37,3 +37,8 @@ _UI components tree_
 
   - `SettingsPage`
     - `SettingsListSection` - https://api.flutter.dev/flutter/cupertino/CupertinoListSection-class.html
+
+## Future thoughts
+
+- How to improve `home.dart` so there is no check for the same stuff in multiple palces?
+- Bavigation menu labels must be configurable from Settings

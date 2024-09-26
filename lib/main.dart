@@ -20,7 +20,6 @@ class _RootPageState extends State<RootPage> {
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
-        // TODO: lables must be configurable from 'Settings'
         items: const [
           BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.home), label: 'Home'),
