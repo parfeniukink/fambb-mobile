@@ -107,7 +107,7 @@ class ApiService {
             "$baseUrl$analyticsTransactionsPath?context=$context&limit=$limit");
       } else {
         url = Uri.parse(
-            "$baseUrl$analyticsTransactionsPath?currency=$currency&context=$context&limit=$limit");
+            "$baseUrl$analyticsTransactionsPath?currencyId=$currency&context=$context&limit=$limit");
       }
 
       var response = await http.get(url);
