@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:fambb_mobile/widgets/section.dart';
 import 'package:fambb_mobile/data/user.dart';
 import 'package:fambb_mobile/data/currency.dart';
 import 'package:fambb_mobile/data/transactions.dart';
+import 'package:fambb_mobile/widgets/section.dart';
 import 'package:flutter/cupertino.dart';
 
 class AddCostPage extends StatefulWidget {
@@ -23,12 +23,22 @@ class AddCostPage extends StatefulWidget {
 }
 
 class _AddCostPageState extends State<AddCostPage> {
+// data state
   DateTime date = DateTime.now();
   late String name;
   late int value;
   late int currencyId;
   late int categoryId;
+
+  // GUI state
+  // represent currencies that are going to be displayed in the modal page
   late List<Map> _currenciesForModal;
+
+  // just to represent the placeholder of the selected currency
+  late String _selectedCurrencyPlaceholder;
+
+  // just to represent the placeholder of the selected cost category
+  late String _selectedCategoryPlaceholder;
 
   _rejectCallback(BuildContext context) {
     print("Reject the window");
@@ -38,35 +48,32 @@ class _AddCostPageState extends State<AddCostPage> {
     print("Submit the call");
   }
 
-  _setCurrenciesForModal() {
+  @override
+  void initState() {
+    super.initState();
+
+    // adjust currencies that are displayed in the modal
     _currenciesForModal = widget.currencies
         .map((item) => {
               "id": item.id,
               "placeholder": "${item.name} - ${item.sign}",
             })
         .toList();
-  }
 
-  @override
-  void initState() {
-    super.initState();
-    _setCurrenciesForModal();
+    // adjust the selected currency if the default is provided
+    final Currency? defaultCurrency = widget.user.configuration.defaultCurrency;
+    _selectedCurrencyPlaceholder = (defaultCurrency != null)
+        ? "${defaultCurrency.name} - ${defaultCurrency.sign}"
+        : "select currency";
+
+    final CostCategory? defaultCategory =
+        widget.user.configuration.defaultCostCategory;
+    _selectedCategoryPlaceholder =
+        (defaultCategory != null) ? defaultCategory.name : "select category";
   }
 
   @override
   Widget build(BuildContext context) {
-    Currency? defaultCurrency = widget.user.configuration.defaultCurrency;
-    CostCategory? defaultCostCategory =
-        widget.user.configuration.defaultCostCategory;
-    String? currencyPlaceholder =
-        (defaultCurrency != null) ? defaultCurrency.sign : null;
-    String? categoryPlaceholder =
-        (defaultCostCategory != null) ? defaultCostCategory.name : null;
-
-    if (defaultCurrency != null) {
-      currencyPlaceholder = defaultCurrency.sign;
-    }
-
     return CupertinoPageScaffold(
       child: SafeArea(
           child: SingleChildScrollView(
@@ -94,25 +101,30 @@ class _AddCostPageState extends State<AddCostPage> {
                       ),
                       const SizedBox(height: 20),
                       CupertinoButton(
-                          child: (currencyPlaceholder == null)
-                              ? const Text("select currency")
-                              : Text("currency $currencyPlaceholder"),
-                          onPressed: () {
-                            Navigator.of(context).restorablePush(
-                              _currenciesModalBuilder,
-                              arguments: _currenciesForModal,
-                            );
+                          child: Text(_selectedCurrencyPlaceholder),
+                          onPressed: () async {
+                            var selectedCurrency =
+                                await _showCurrencyActionSheet(context);
+                            if (selectedCurrency != null) {
+                              setState(() {
+                                _selectedCurrencyPlaceholder =
+                                    selectedCurrency["placeholder"];
+                                currencyId = selectedCurrency["id"];
+                              });
+                            }
                           }),
                       CupertinoButton(
-                          child: (categoryPlaceholder == null)
-                              ? const Text("select category")
-                              : Text("category [$categoryPlaceholder]"),
-                          onPressed: () {
-                            debugger();
-
-                            Navigator.of(context).restorablePush(
-                              _categoriesModalBuilder,
-                            );
+                          child: Text(_selectedCategoryPlaceholder),
+                          onPressed: () async {
+                            var selectedCategory =
+                                await _showCategoryActionSheet(context);
+                            if (selectedCategory != null) {
+                              setState(() {
+                                _selectedCategoryPlaceholder =
+                                    selectedCategory.name;
+                                categoryId = selectedCategory.id;
+                              });
+                            }
                           }),
                       const SizedBox(height: 20),
                       const CupertinoTextField(
@@ -165,21 +177,17 @@ class _AddCostPageState extends State<AddCostPage> {
     );
   }
 
-  @pragma('vm:entry-point')
-  static Route<void> _currenciesModalBuilder(
-      BuildContext context, Object? arguments) {
-    debugger();
-    final List<Currency> currencies = (arguments as List<Currency>?) ?? [];
-
-    return CupertinoModalPopupRoute<void>(
+  Future<Map?> _showCurrencyActionSheet(BuildContext context) async {
+    return showCupertinoModalPopup<Map>(
+      context: context,
       builder: (BuildContext context) {
         return CupertinoActionSheet(
-          title: const Text('Select the currency from the list'),
-          actions: currencies.map((currency) {
+          title: const Text('Select a currency'),
+          actions: _currenciesForModal.map((item) {
             return CupertinoActionSheetAction(
-              child: Text(currency.name),
+              child: Text(item["placeholder"]),
               onPressed: () {
-                Navigator.pop(context, currency);
+                Navigator.pop(context, item);
               },
             );
           }).toList(),
@@ -188,16 +196,13 @@ class _AddCostPageState extends State<AddCostPage> {
     );
   }
 
-  @pragma('vm:entry-point')
-  static Route<void> _categoriesModalBuilder(
-      BuildContext context, Object? arguments) {
-    final List<CostCategory> categories =
-        (arguments as List<CostCategory>?) ?? [];
-    return CupertinoModalPopupRoute<void>(
+  Future<CostCategory?> _showCategoryActionSheet(BuildContext context) async {
+    return showCupertinoModalPopup<CostCategory>(
+      context: context,
       builder: (BuildContext context) {
         return CupertinoActionSheet(
-          title: const Text('Select a category from the list'),
-          actions: categories.map((category) {
+          title: const Text('Select a category'),
+          actions: widget.costCategories.map((category) {
             return CupertinoActionSheetAction(
               child: Text(category.name),
               onPressed: () {
