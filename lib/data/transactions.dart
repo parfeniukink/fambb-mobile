@@ -7,9 +7,13 @@ part 'transactions.g.dart';
 @JsonSerializable()
 class TransactionResults {
   final List<Transaction> result;
+  final int left;
+  final int context;
 
   TransactionResults({
     required this.result,
+    required this.left,
+    required this.context,
   });
 
   factory TransactionResults.fromJson(Map<String, dynamic> json) =>
@@ -19,16 +23,18 @@ class TransactionResults {
 
 @JsonSerializable()
 class Transaction {
+  final String operation; // income, cost, exchange
   final String name;
   final int value;
-  final Currency currency;
-  final String operation; // income, cost, exchange
+  final String timestamp;
+  final String currency;
 
   Transaction({
+    required this.operation,
     required this.name,
     required this.value,
+    required this.timestamp,
     required this.currency,
-    required this.operation,
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) =>

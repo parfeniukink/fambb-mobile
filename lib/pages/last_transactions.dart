@@ -31,13 +31,13 @@ class _LastTransactionsPageState extends State<LastTransactionsPage> {
     // Dispatcher for Operation Types
     switch (transaction.operation) {
       case "cost":
-        return "- ${transaction.name} ${transaction.value.toStringAsFixed(2)}${transaction.currency.sign}"
+        return "- ${transaction.name} ${transaction.value.toStringAsFixed(2)}${transaction.currency}"
             .toString();
       case "income":
-        return "+ ${transaction.name} ${transaction.value.toStringAsFixed(2)}${transaction.currency.sign}"
+        return "+ ${transaction.name} ${transaction.value.toStringAsFixed(2)}${transaction.currency}"
             .toString();
       case "exchange":
-        return "= Exchange ${transaction.value.toStringAsFixed(2)}${transaction.currency.sign}"
+        return "= Exchange ${transaction.value.toStringAsFixed(2)}${transaction.currency}"
             .toString();
       default:
         throw Error();

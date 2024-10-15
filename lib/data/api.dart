@@ -14,7 +14,6 @@ const String costCategoriesPath = "/costs/categories";
 const String costPath = "/costs";
 const String analyticsEquityPath = "/analytics/equity";
 const String analyticsTransactionsPath = "/analytics/transactions";
-const String analyticsLastTransactionsPath = "/analytics/transactions/last";
 
 class ApiService {
   // Get all the equity data
@@ -95,14 +94,14 @@ class ApiService {
     return null;
   }
 
-  // Get last transactions
+  // Get last 10 transactions
   // -----------------------------------------
   Future<List<Transaction>?> fetchTransactions([int? currency]) async {
     try {
       Uri url;
 
       if (currency == null) {
-        url = Uri.parse("$baseUrl$analyticsLastTransactionsPath");
+        url = Uri.parse("$baseUrl$analyticsTransactionsPath");
       } else {
         url =
             Uri.parse("$baseUrl$analyticsTransactionsPath?currency=$currency");
@@ -120,5 +119,6 @@ class ApiService {
       log(e.toString());
     }
     return null;
+
   }
 }

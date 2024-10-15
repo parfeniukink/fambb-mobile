@@ -29,13 +29,13 @@ class _LastTransactionsSectionState extends State<LastTransactionsSection> {
     // Dispatcher for Operation Types
     switch (transaction.operation) {
       case "cost":
-        return "- ${transaction.name} ${transaction.value.toStringAsFixed(2)}${transaction.currency.sign}"
+        return "- ${transaction.name} ${transaction.value.toStringAsFixed(2)}${transaction.currency}"
             .toString();
       case "income":
-        return "+ ${transaction.name} ${transaction.value.toStringAsFixed(2)}${transaction.currency.sign}"
+        return "+ ${transaction.name} ${transaction.value.toStringAsFixed(2)}${transaction.currency}"
             .toString();
       case "exchange":
-        return "= Exchange ${transaction.value.toStringAsFixed(2)}${transaction.currency.sign}"
+        return "= Exchange ${transaction.value.toStringAsFixed(2)}${transaction.currency}"
             .toString();
       default:
         throw Error();
@@ -58,7 +58,13 @@ class _LastTransactionsSectionState extends State<LastTransactionsSection> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: _transactions.map((item) {
               String text = getTransactionRepr(item);
-              return Row(children: [Text(text)]);
+              return Row(children: [
+                Expanded(
+                    child: Text(
+                  text,
+                  overflow: TextOverflow.ellipsis,
+                )),
+              ]);
             }).toList());
   }
 }

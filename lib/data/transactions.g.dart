@@ -11,26 +11,32 @@ TransactionResults _$TransactionResultsFromJson(Map<String, dynamic> json) =>
       result: (json['result'] as List<dynamic>)
           .map((e) => Transaction.fromJson(e as Map<String, dynamic>))
           .toList(),
+      left: (json['left'] as num).toInt(),
+      context: (json['context'] as num).toInt(),
     );
 
 Map<String, dynamic> _$TransactionResultsToJson(TransactionResults instance) =>
     <String, dynamic>{
       'result': instance.result,
+      'left': instance.left,
+      'context': instance.context,
     };
 
 Transaction _$TransactionFromJson(Map<String, dynamic> json) => Transaction(
+      operation: json['operation'] as String,
       name: json['name'] as String,
       value: (json['value'] as num).toInt(),
-      currency: Currency.fromJson(json['currency'] as Map<String, dynamic>),
-      operation: json['operation'] as String,
+      timestamp: json['timestamp'] as String,
+      currency: json['currency'] as String,
     );
 
 Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
     <String, dynamic>{
+      'operation': instance.operation,
       'name': instance.name,
       'value': instance.value,
+      'timestamp': instance.timestamp,
       'currency': instance.currency,
-      'operation': instance.operation,
     };
 
 CostCategoryResults _$CostCategoryResultsFromJson(Map<String, dynamic> json) =>
