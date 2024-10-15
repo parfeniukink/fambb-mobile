@@ -1,7 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'currency.dart';
-
 part 'transactions.g.dart';
 
 @JsonSerializable()

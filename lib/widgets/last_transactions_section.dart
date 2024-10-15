@@ -15,11 +15,12 @@ class _LastTransactionsSectionState extends State<LastTransactionsSection> {
   late List<Transaction> _transactions;
 
   Future<void> getLastTransactions() async {
-    List<Transaction>? transactions = await ApiService().fetchTransactions();
+    TransactionResults? transactionResults =
+        await ApiService().fetchTransactions();
 
-    if (transactions != null) {
+    if (transactionResults != null) {
       setState(() {
-        _transactions = transactions;
+        _transactions = transactionResults.result;
         _isLoading = false;
       });
     }
@@ -35,7 +36,7 @@ class _LastTransactionsSectionState extends State<LastTransactionsSection> {
         return "+ ${transaction.name} ${transaction.value.toStringAsFixed(2)}${transaction.currency}"
             .toString();
       case "exchange":
-        return "= Exchange ${transaction.value.toStringAsFixed(2)}${transaction.currency}"
+        return "≈ Exchange ${transaction.value.toStringAsFixed(2)}${transaction.currency}"
             .toString();
       default:
         throw Error();

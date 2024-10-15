@@ -96,29 +96,33 @@ class ApiService {
 
   // Get last 10 transactions
   // -----------------------------------------
-  Future<List<Transaction>?> fetchTransactions([int? currency]) async {
+  Future<TransactionResults?> fetchTransactions(
+      {int? currency, int context = 0, int limit = 10}) async {
     try {
       Uri url;
 
+      // Build the URL with optional currency and pagination parameters
       if (currency == null) {
-        url = Uri.parse("$baseUrl$analyticsTransactionsPath");
+        url = Uri.parse(
+            "$baseUrl$analyticsTransactionsPath?context=$context&limit=$limit");
       } else {
-        url =
-            Uri.parse("$baseUrl$analyticsTransactionsPath?currency=$currency");
+        url = Uri.parse(
+            "$baseUrl$analyticsTransactionsPath?currency=$currency&context=$context&limit=$limit");
       }
+
       var response = await http.get(url);
 
       if (response.statusCode == 200) {
+        // Parse the JSON response into the TransactionResults object
         TransactionResults transactionResults =
             TransactionResults.fromJson(json.decode(response.body));
-        return transactionResults.result;
+        return transactionResults; // Return the full result with context and left
       } else {
-        log("Failed to load transactions");
+        log("Failed to load transactions. Status code: ${response.statusCode}");
       }
     } catch (e) {
       log(e.toString());
     }
     return null;
-
   }
 }
