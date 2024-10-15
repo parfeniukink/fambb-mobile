@@ -12,11 +12,11 @@ class LastTransactionsPage extends StatefulWidget {
 
 class _LastTransactionsPageState extends State<LastTransactionsPage> {
   late bool _isLoading = true;
-  late bool _isLoadingMore = false; // Flag for loading more data
-  late List<Transaction> _transactions = []; // Store transactions
+  late bool _isLoadingMore = false;
+  late List<Transaction> _transactions = [];
 
-  late int _context = 0; // Pagination context (offset)
-  late int _left = 0; // Remaining items count
+  late int _context = 0;
+  late int _left = 0;
 
   // Fetch transactions with pagination support
   Future<void> getTransactions({bool loadMore = false}) async {
@@ -36,13 +36,12 @@ class _LastTransactionsPageState extends State<LastTransactionsPage> {
     if (result != null && result.result.isNotEmpty) {
       setState(() {
         if (loadMore) {
-          _transactions.addAll(result.result); // Append new transactions
+          _transactions.addAll(result.result);
         } else {
-          _transactions = result.result; // Load first batch of transactions
+          _transactions = result.result;
         }
-        // Update context and left values
-        _context = result.context; // Update context for next batch
-        _left = result.left; // Remaining transactions
+        _context = result.context;
+        _left = result.left;
         _isLoading = false;
         _isLoadingMore = false;
       });
@@ -70,12 +69,34 @@ class _LastTransactionsPageState extends State<LastTransactionsPage> {
 
   // Build the main content of the screen
   Widget buildScreen() {
-    return ListView(
-      children: [
-        // Display the transactions
-        ..._transactions.map((item) {
-          String text = getTransactionRepr(item);
-          return Padding(
+    // Group transactions by timestamp
+    Map<String, List<Transaction>> groupedTransactions = {};
+    for (var transaction in _transactions) {
+      if (groupedTransactions[transaction.timestamp] == null) {
+        groupedTransactions[transaction.timestamp] = [];
+      }
+      groupedTransactions[transaction.timestamp]!.add(transaction);
+    }
+
+    List<Widget> transactionWidgets = [];
+    groupedTransactions.forEach((timestamp, transactions) {
+      transactionWidgets.add(
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          child: Text(
+            timestamp,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+        ),
+      );
+
+      for (var transaction in transactions) {
+        String text = getTransactionRepr(transaction);
+        transactionWidgets.add(
+          Padding(
             padding: const EdgeInsets.symmetric(vertical: 5.0),
             child: Row(
               children: [
@@ -87,23 +108,31 @@ class _LastTransactionsPageState extends State<LastTransactionsPage> {
                 ),
               ],
             ),
-          );
-        }).toList(),
-
-        // Show 'Load More' button if there are more items to load
-        if (_left > 0)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: CupertinoButton(
-              onPressed:
-                  _isLoadingMore ? null : () => getTransactions(loadMore: true),
-              child: _isLoadingMore
-                  ? const CupertinoActivityIndicator()
-                  : const Text("Load More"),
-            ),
           ),
-      ],
-    );
+        );
+      }
+
+      // Add spacing between groups
+      transactionWidgets.add(const SizedBox(height: 20));
+    });
+
+    // Show 'Load More' button if there are more items to load
+    if (_left > 0) {
+      transactionWidgets.add(
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: CupertinoButton(
+            onPressed:
+                _isLoadingMore ? null : () => getTransactions(loadMore: true),
+            child: _isLoadingMore
+                ? const CupertinoActivityIndicator()
+                : const Text("load more"),
+          ),
+        ),
+      );
+    }
+
+    return ListView(children: transactionWidgets);
   }
 
   @override

@@ -61,10 +61,11 @@ class _LastTransactionsSectionState extends State<LastTransactionsSection> {
               String text = getTransactionRepr(item);
               return Row(children: [
                 Expanded(
-                    child: Text(
-                  text,
-                  overflow: TextOverflow.ellipsis,
-                )),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Text(text),
+                  ),
+                ),
               ]);
             }).toList());
   }
