@@ -23,7 +23,7 @@ class TransactionResults {
 class Transaction {
   final String operation; // income, cost, exchange
   final String name;
-  final int value;
+  final double value;
   final String timestamp;
   final String currency;
 

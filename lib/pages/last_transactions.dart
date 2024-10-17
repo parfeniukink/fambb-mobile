@@ -20,6 +20,8 @@ class _LastTransactionsPageState extends State<LastTransactionsPage> {
 
   // Fetch transactions with pagination support
   Future<void> getTransactions({bool loadMore = false}) async {
+    if (!mounted) return;
+
     if (loadMore) {
       setState(() {
         _isLoadingMore = true;

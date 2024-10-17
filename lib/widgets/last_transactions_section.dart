@@ -1,72 +1,43 @@
-import 'package:fambb_mobile/data/api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fambb_mobile/data/transactions.dart';
 
-class LastTransactionsSection extends StatefulWidget {
-  const LastTransactionsSection({super.key});
+class LastTransactionsSection extends StatelessWidget {
+  final List<Transaction> transactions;
 
-  @override
-  State<LastTransactionsSection> createState() =>
-      _LastTransactionsSectionState();
-}
-
-class _LastTransactionsSectionState extends State<LastTransactionsSection> {
-  late bool _isLoading = true;
-  late List<Transaction> _transactions;
-
-  Future<void> getLastTransactions() async {
-    TransactionResults? transactionResults =
-        await ApiService().fetchTransactions();
-
-    if (transactionResults != null) {
-      setState(() {
-        _transactions = transactionResults.result;
-        _isLoading = false;
-      });
-    }
-  }
+  const LastTransactionsSection({super.key, required this.transactions});
 
   String getTransactionRepr(Transaction transaction) {
     // Dispatcher for Operation Types
     switch (transaction.operation) {
       case "cost":
-        return "- ${transaction.name} ${transaction.value.toStringAsFixed(2)}${transaction.currency}"
-            .toString();
+        return "- ${transaction.name} ${transaction.value.toStringAsFixed(2)}${transaction.currency}";
       case "income":
-        return "+ ${transaction.name} ${transaction.value.toStringAsFixed(2)}${transaction.currency}"
-            .toString();
+        return "+ ${transaction.name} ${transaction.value.toStringAsFixed(2)}${transaction.currency}";
       case "exchange":
-        return "≈ Exchange ${transaction.value.toStringAsFixed(2)}${transaction.currency}"
-            .toString();
+        return "≈ Exchange ${transaction.value.toStringAsFixed(2)}${transaction.currency}";
       default:
         throw Error();
     }
   }
 
   @override
-  void initState() {
-    super.initState();
-    getLastTransactions();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return _isLoading
-        ? const Center(
-            child: CupertinoActivityIndicator(),
-          )
-        : Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: _transactions.map((item) {
-              String text = getTransactionRepr(item);
-              return Row(children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Text(text),
-                  ),
+    if (transactions.isEmpty) {
+      return const Center(child: Text("no transactions"));
+    } else {
+      return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: transactions.map((item) {
+            String text = getTransactionRepr(item);
+            return Row(children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Text(text),
                 ),
-              ]);
-            }).toList());
+              ),
+            ]);
+          }).toList());
+    }
   }
 }

@@ -6,6 +6,7 @@ import 'package:fambb_mobile/data/equity.dart';
 import 'package:fambb_mobile/data/transactions.dart';
 import 'package:fambb_mobile/data/currency.dart';
 import 'package:fambb_mobile/data/user.dart';
+import 'package:fambb_mobile/data/cost.dart';
 
 const String baseUrl = "http://localhost:8000";
 const String usersPath = "/users";
@@ -124,5 +125,30 @@ class ApiService {
       log(e.toString());
     }
     return null;
+  }
+
+  // Add yet another cost.
+  // Returns `true` if created
+  // Returns `false` if not created
+  Future<bool> addCost(CostCreateBody costCreateBody) async {
+    try {
+      var response = await http.post(
+        Uri.parse(
+          "$baseUrl$costPath",
+        ),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(costCreateBody.toJson()),
+      );
+
+      if (response.statusCode == 201) {
+        log('Cost created successfully');
+        return true; // Successfully created
+      } else {
+        log('Failed to create cost. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return false; // Failed to create
   }
 }

@@ -1,3 +1,4 @@
+import 'package:fambb_mobile/data/equity.dart';
 import 'package:fambb_mobile/data/user.dart';
 import 'package:fambb_mobile/widgets/equity_section.dart';
 import 'package:fambb_mobile/widgets/last_transactions_section.dart';
@@ -19,19 +20,14 @@ class _HomePageState extends State<HomePage> {
   User? _user;
   List<Currency>? _currencies;
   List<CostCategory>? _costCategories;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchUser();
-    _fetchCurrencies();
-    _fetchCostCategories();
-  }
+  List<Transaction>? _lastTransactions;
+  List<Equity>? _equityData;
 
   Future<void> _fetchUser() async {
     User? result = await ApiService().fetchUser();
 
     if (result != null) {
+      if (!mounted) return;
       setState(() {
         _user = result;
       });
@@ -42,6 +38,7 @@ class _HomePageState extends State<HomePage> {
     List<Currency>? results = await ApiService().fetchCurrencies();
 
     if (results != null) {
+      if (!mounted) return;
       setState(() {
         _currencies = results;
       });
@@ -52,16 +49,52 @@ class _HomePageState extends State<HomePage> {
     List<CostCategory>? results = await ApiService().fetchCostCategories();
 
     if (results != null) {
+      if (!mounted) return;
       setState(() {
         _costCategories = results;
       });
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
+  // fetch the last transactions into the LastTransactionsSection
+  Future<void> _fetchLastTransactions() async {
+    TransactionResults? transactionResults =
+        await ApiService().fetchTransactions();
+
+    if (transactionResults != null) {
+      if (!mounted) return;
+      setState(() {
+        _lastTransactions = transactionResults.result;
+      });
+    }
+  }
+
+  // fetch the equity data into the EquitySection
+  Future<void> _fetchEquity() async {
+    List<Equity>? equityData = await ApiService().fetchEquity();
+
+    if (equityData != null) {
+      if (!mounted) return;
+      setState(() {
+        _equityData = equityData;
+      });
+    }
+  }
+
+  // 'pull-to-refersh' side effect call
+  Future<void> _refreshPageState() async {
+    await Future.wait([
+      _fetchCurrencies(),
+      _fetchCostCategories(),
+      _fetchEquity(),
+      _fetchLastTransactions(),
+    ]);
+  }
+
+  // build the page
+  Widget pageBuilder() {
     return (_user == null && _currencies == null && _costCategories == null)
-        ? const CupertinoActivityIndicator()
+        ? const Center(child: CupertinoActivityIndicator())
         : CupertinoPageScaffold(
             child: SafeArea(
                 child: SingleChildScrollView(
@@ -70,16 +103,23 @@ class _HomePageState extends State<HomePage> {
                     const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
                 child: Column(
                   children: [
-                    const Section(
+                    Section(
                       title: "🏦  Equity",
                       border: 3,
-                      child: EquitySection(),
+                      child: (_equityData == null)
+                          ? const CupertinoActivityIndicator()
+                          : EquitySection(equityData: _equityData!),
                     ),
-                    const Section(
+                    const SizedBox(height: 10),
+                    Section(
                       title: "📝  Last Transactions",
                       border: 3,
-                      child: LastTransactionsSection(),
+                      child: (_lastTransactions == null)
+                          ? const CupertinoActivityIndicator()
+                          : LastTransactionsSection(
+                              transactions: _lastTransactions!),
                     ),
+                    const SizedBox(height: 10),
                     Section(
                       title: "🏃  Quick Actions",
                       border: 3,
@@ -98,5 +138,29 @@ class _HomePageState extends State<HomePage> {
               ),
             )),
           );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // fetch the main data on the screen
+    _fetchUser();
+    _fetchCurrencies();
+    _fetchCostCategories();
+    _fetchLastTransactions();
+    _fetchEquity();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        CupertinoSliverRefreshControl(onRefresh: _refreshPageState),
+        SliverList(
+            delegate:
+                SliverChildListDelegate([pageBuilder()]))
+      ],
+    );
   }
 }

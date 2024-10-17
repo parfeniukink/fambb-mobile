@@ -1,9 +1,9 @@
-import 'dart:developer';
-
 import 'package:fambb_mobile/data/user.dart';
 import 'package:fambb_mobile/data/currency.dart';
+import 'package:fambb_mobile/data/cost.dart';
 import 'package:fambb_mobile/data/transactions.dart';
 import 'package:fambb_mobile/widgets/section.dart';
+import 'package:fambb_mobile/data/api.dart';
 import 'package:flutter/cupertino.dart';
 
 class AddCostPage extends StatefulWidget {
@@ -23,10 +23,10 @@ class AddCostPage extends StatefulWidget {
 }
 
 class _AddCostPageState extends State<AddCostPage> {
-// data state
+  // data state
   DateTime date = DateTime.now();
   late String name;
-  late int value;
+  late double value;
   late int currencyId;
   late int categoryId;
 
@@ -40,12 +40,21 @@ class _AddCostPageState extends State<AddCostPage> {
   // just to represent the placeholder of the selected cost category
   late String _selectedCategoryPlaceholder;
 
-  _rejectCallback(BuildContext context) {
-    print("Reject the window");
-  }
-
-  _submitCallback(BuildContext context) {
-    print("Submit the call");
+  Future<bool> _submitCallback(BuildContext context) async {
+    bool costIsCreated = await ApiService().addCost(
+      CostCreateBody(
+        name: name,
+        value: value,
+        timestamp: date,
+        currencyId: currencyId,
+        categoryId: categoryId,
+      ),
+    );
+    if (costIsCreated) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @override
@@ -105,7 +114,9 @@ class _AddCostPageState extends State<AddCostPage> {
                           onPressed: () async {
                             var selectedCurrency =
                                 await _showCurrencyActionSheet(context);
+
                             if (selectedCurrency != null) {
+                              if (!mounted) return;
                               setState(() {
                                 _selectedCurrencyPlaceholder =
                                     selectedCurrency["placeholder"];
@@ -118,7 +129,10 @@ class _AddCostPageState extends State<AddCostPage> {
                           onPressed: () async {
                             var selectedCategory =
                                 await _showCategoryActionSheet(context);
+                            if (!mounted) return;
+
                             if (selectedCategory != null) {
+                              if (!mounted) return;
                               setState(() {
                                 _selectedCategoryPlaceholder =
                                     selectedCategory.name;
@@ -127,13 +141,24 @@ class _AddCostPageState extends State<AddCostPage> {
                             }
                           }),
                       const SizedBox(height: 20),
-                      const CupertinoTextField(
+                      CupertinoTextField(
                         placeholder: "name",
+                        onChanged: (value) {
+                          setState(() {
+                            name = value;
+                          });
+                        },
                       ),
                       const SizedBox(height: 20),
-                      const CupertinoTextField(
-                          placeholder: "value",
-                          keyboardType: TextInputType.number),
+                      CupertinoTextField(
+                        placeholder: "value",
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          setState(() {
+                            this.value = double.tryParse(value) ?? 0.0;
+                          });
+                        },
+                      ),
                       const SizedBox(height: 40),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -141,12 +166,10 @@ class _AddCostPageState extends State<AddCostPage> {
                           CupertinoButton(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 20),
-                            onPressed: () {
-                              _rejectCallback(context);
-                            },
+                            onPressed: () => Navigator.pop(context),
                             color: CupertinoColors.systemRed,
                             child: const Text(
-                              "Reject",
+                              "reject",
                               style: TextStyle(
                                 color: CupertinoColors.white,
                               ),
@@ -155,12 +178,13 @@ class _AddCostPageState extends State<AddCostPage> {
                           CupertinoButton(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 20),
-                            onPressed: () {
-                              _submitCallback(context);
+                            onPressed: () async {
+                              Navigator.pop(context);
+                              await _submitCallback(context);
                             },
                             color: CupertinoColors.activeGreen,
                             child: const Text(
-                              "Submit",
+                              "submit",
                               style: TextStyle(
                                 color: CupertinoColors.white,
                               ),
