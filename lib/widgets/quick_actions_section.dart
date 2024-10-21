@@ -1,3 +1,4 @@
+import 'package:fambb_mobile/pages/add_income.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fambb_mobile/pages/add_cost.dart';
 import 'package:fambb_mobile/data/user.dart';
@@ -72,7 +73,17 @@ class _QuickActionsSectionState extends State<QuickActionsSection> {
                       fontWeight: FontWeight.w900,
                       color: CupertinoColors.white),
                 ),
-                onPressed: () {}),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => AddIncomePage(
+                        user: widget.user,
+                        currencies: widget.currencies,
+                      ),
+                    ),
+                  );
+                }),
           ],
         ),
         const SizedBox(height: 20),

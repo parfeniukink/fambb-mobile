@@ -3,6 +3,7 @@ import 'package:fambb_mobile/data/currency.dart';
 import 'package:fambb_mobile/data/cost.dart';
 import 'package:fambb_mobile/data/user.dart';
 import 'package:fambb_mobile/pages/update_cost.dart';
+import 'package:fambb_mobile/pages/update_income.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fambb_mobile/data/transactions.dart';
 
@@ -186,25 +187,31 @@ class _LastTransactionsPageState extends State<LastTransactionsPage> {
     return showCupertinoModalPopup<Map>(
       context: context,
       builder: (BuildContext context) {
+        List<Widget> actions = [
+          CupertinoActionSheetAction(
+            isDestructiveAction: true,
+            child: const Text("delete"),
+            onPressed: () {
+              Navigator.pop(context);
+              deleteCallback(transaction);
+            },
+          ),
+        ];
+
+        if (transaction.operation == "cost" ||
+            transaction.operation == "income") {
+          actions.add(CupertinoActionSheetAction(
+            child: const Text("edit"),
+            onPressed: () {
+              Navigator.pop(context);
+              editCallback(transaction);
+            },
+          ));
+        }
+
         return CupertinoActionSheet(
           title: const Text('select an option'),
-          actions: [
-            CupertinoActionSheetAction(
-              isDestructiveAction: true,
-              child: const Text("delete"),
-              onPressed: () {
-                Navigator.pop(context);
-                deleteCallback(transaction);
-              },
-            ),
-            CupertinoActionSheetAction(
-              child: const Text("edit"),
-              onPressed: () {
-                Navigator.pop(context);
-                editCallback(transaction);
-              },
-            )
-          ],
+          actions: actions,
         );
       },
     );
@@ -225,9 +232,16 @@ class _LastTransactionsPageState extends State<LastTransactionsPage> {
         ),
       );
     } else if (transaction.operation == "income") {
-      throw Error();
-    } else if (transaction.operation == "exchange") {
-      throw Error();
+      Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (context) => UpdateIncomePage(
+            transaction: transaction,
+            user: widget.user,
+            currencies: widget.currencies,
+          ),
+        ),
+      );
     } else {
       throw Error();
     }
@@ -246,9 +260,9 @@ class _LastTransactionsPageState extends State<LastTransactionsPage> {
     if (transaction.operation == "cost") {
       await api.deleteCost(transaction.id);
     } else if (transaction.operation == "income") {
-      throw Error();
+      await api.deleteIncome(transaction.id);
     } else if (transaction.operation == "exchange") {
-      throw Error();
+      await api.deleteExchange(transaction.id);
     } else {
       throw Error();
     }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:fambb_mobile/data/income.dart';
 import 'package:http/http.dart' as http;
 import 'package:fambb_mobile/data/equity.dart';
 import 'package:fambb_mobile/data/transactions.dart';
@@ -205,7 +206,112 @@ class ApiService {
         headers: {"Content-Type": "application/json"},
       );
 
+      if (response.statusCode == 204) {
+        return true; // Successfully updated
+      } else {}
+    } catch (e) {
+      log(e.toString());
+    }
+    return false; // Failed to update
+  }
+
+  // Incomes section
+  // -----------------------------------------
+  Future<bool> addIncome(IncomeCreateBody body) async {
+    try {
+      var response = await http.post(
+        Uri.parse(
+          "$baseUrl/incomes",
+        ),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(body.toJson()),
+      );
+
+      if (response.statusCode == 201) {
+        return true;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return false;
+  }
+
+  // Get existing income.
+  Future<Income?> getIncome(int incomeId) async {
+    try {
+      var response = await http.get(
+        Uri.parse("$baseUrl/incomes/$incomeId"),
+        headers: {"Content-Type": "application/json"},
+      );
+
       if (response.statusCode == 200) {
+        return IncomeResult.fromJson(json.decode(response.body)).result;
+      } else {}
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
+  }
+
+  // Update existing income.
+  // Returns `true` if updated
+  // Returns `false` if not updated
+  Future<bool> updateIncome(int incomeId, IncomeUpdateBody body) async {
+    try {
+      var response = await http.patch(
+        Uri.parse(
+          "$baseUrl/incomes/$incomeId",
+        ),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(body.toJson()),
+      );
+
+      if (response.statusCode == 200) {
+        return true; // Successfully updated
+      } else {}
+    } catch (e) {
+      log(e.toString());
+    }
+    return false; // Failed to update
+  }
+
+  // Delete existing income.
+  // Returns `true` if deleted
+  // Returns `false` if not deleted
+  Future<bool> deleteIncome(int imcomeId) async {
+    try {
+      var response = await http.delete(
+        Uri.parse(
+          "$baseUrl/incomes/$imcomeId",
+        ),
+        headers: {"Content-Type": "application/json"},
+      );
+
+      if (response.statusCode == 204) {
+        return true; // Successfully updated
+      } else {}
+    } catch (e) {
+      log(e.toString());
+    }
+    return false; // Failed to update
+  }
+
+  // Currency exchange section
+  // -----------------------------------------
+
+  // Delete existing income.
+  // Returns `true` if deleted
+  // Returns `false` if not deleted
+  Future<bool> deleteExchange(int exchangeId) async {
+    try {
+      var response = await http.delete(
+        Uri.parse(
+          "$baseUrl/exchanges/$exchangeId",
+        ),
+        headers: {"Content-Type": "application/json"},
+      );
+
+      if (response.statusCode == 204) {
         return true; // Successfully updated
       } else {}
     } catch (e) {
