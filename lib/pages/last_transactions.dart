@@ -1,72 +1,59 @@
 import 'package:fambb_mobile/data/api.dart';
+import 'package:fambb_mobile/data/currency.dart';
+import 'package:fambb_mobile/data/cost.dart';
+import 'package:fambb_mobile/data/user.dart';
+import 'package:fambb_mobile/pages/update_cost.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fambb_mobile/data/transactions.dart';
 
 class LastTransactionsPage extends StatefulWidget {
   final int currencyId;
-  const LastTransactionsPage({super.key, required this.currencyId});
+  final User user;
+  final List<Currency> currencies;
+  final List<CostCategory> costCategories;
+
+  const LastTransactionsPage({
+    super.key,
+    required this.currencyId,
+    required this.user,
+    required this.currencies,
+    required this.costCategories,
+  });
 
   @override
   State<LastTransactionsPage> createState() => _LastTransactionsPageState();
 }
 
 class _LastTransactionsPageState extends State<LastTransactionsPage> {
+  // Page utils
   late bool _isLoading = true;
-  late bool _isLoadingMore = false;
-  late List<Transaction> _transactions = [];
 
+  // Pagination data
+  late bool _hasMoreTransaction = false;
   late int _context = 0;
   late int _left = 0;
 
-  // Fetch transactions with pagination support
-  Future<void> getTransactions({bool loadMore = false}) async {
-    if (!mounted) return;
+  // User data
+  late List<Transaction> _transactions = [];
 
-    if (loadMore) {
-      setState(() {
-        _isLoadingMore = true;
-      });
-    } else {
-      setState(() {
-        _isLoading = true;
-      });
-    }
-
-    TransactionResults? result = await ApiService().fetchTransactions(
-        currency: widget.currencyId, context: _context, limit: 10);
-
-    if (result != null && result.result.isNotEmpty) {
-      setState(() {
-        if (loadMore) {
-          _transactions.addAll(result.result);
-        } else {
-          _transactions = result.result;
-        }
-        _context = result.context;
-        _left = result.left;
-        _isLoading = false;
-        _isLoadingMore = false;
-      });
-    } else {
-      setState(() {
-        _isLoading = false;
-        _isLoadingMore = false;
-      });
-    }
+  @override
+  void initState() {
+    super.initState();
+    getTransactions(); // Load initial batch of transactions
   }
 
-  // Method to convert transaction into a displayable string
-  String getTransactionRepr(Transaction transaction) {
-    switch (transaction.operation) {
-      case "cost":
-        return "- ${transaction.name} ${transaction.value.toStringAsFixed(2)}${transaction.currency}";
-      case "income":
-        return "+ ${transaction.name} ${transaction.value.toStringAsFixed(2)}${transaction.currency}";
-      case "exchange":
-        return "≈ Exchange ${transaction.value.toStringAsFixed(2)}${transaction.currency}";
-      default:
-        throw Error();
-    }
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+          child: _isLoading
+              ? const Center(child: CupertinoActivityIndicator())
+              : buildScreen(),
+        ),
+      ),
+    );
   }
 
   // Build the main content of the screen
@@ -97,18 +84,23 @@ class _LastTransactionsPageState extends State<LastTransactionsPage> {
 
       for (var transaction in transactions) {
         String text = getTransactionRepr(transaction);
+
         transactionWidgets.add(
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Text(text),
+          GestureDetector(
+            onLongPress: () => showTransactionActions(
+                context, transaction), // Long press triggers action menu
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Text(text),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
@@ -124,9 +116,10 @@ class _LastTransactionsPageState extends State<LastTransactionsPage> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),
           child: CupertinoButton(
-            onPressed:
-                _isLoadingMore ? null : () => getTransactions(loadMore: true),
-            child: _isLoadingMore
+            onPressed: _hasMoreTransaction
+                ? null
+                : () => getTransactions(loadMore: true),
+            child: _hasMoreTransaction
                 ? const CupertinoActivityIndicator()
                 : const Text("load more"),
           ),
@@ -137,23 +130,127 @@ class _LastTransactionsPageState extends State<LastTransactionsPage> {
     return ListView(children: transactionWidgets);
   }
 
-  @override
-  void initState() {
-    super.initState();
-    getTransactions(); // Load initial batch of transactions
+// Fetch transactions with pagination support
+  Future<void> getTransactions({bool loadMore = false}) async {
+    if (!mounted) return;
+
+    if (loadMore) {
+      setState(() {
+        _hasMoreTransaction = true;
+      });
+    } else {
+      setState(() {
+        _isLoading = true;
+      });
+    }
+
+    TransactionResults? result = await ApiService().fetchTransactions(
+        currency: widget.currencyId, context: _context, limit: 10);
+
+    if (result != null && result.result.isNotEmpty) {
+      setState(() {
+        if (loadMore) {
+          _transactions.addAll(result.result);
+        } else {
+          _transactions = result.result;
+        }
+        _context = result.context;
+        _left = result.left;
+        _isLoading = false;
+        _hasMoreTransaction = false;
+      });
+    } else {
+      setState(() {
+        _isLoading = false;
+        _hasMoreTransaction = false;
+      });
+    }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-          child: _isLoading
-              ? const Center(child: CupertinoActivityIndicator())
-              : buildScreen(),
-        ),
-      ),
+// Method to convert transaction into a displayable string
+  String getTransactionRepr(Transaction transaction) {
+    switch (transaction.operation) {
+      case "cost":
+        return "- ${transaction.name} ${transaction.value.toStringAsFixed(2)}${transaction.currency}";
+      case "income":
+        return "+ ${transaction.name} ${transaction.value.toStringAsFixed(2)}${transaction.currency}";
+      case "exchange":
+        return "≈ Exchange ${transaction.value.toStringAsFixed(2)}${transaction.currency}";
+      default:
+        throw Error();
+    }
+  }
+
+  Future<Map?> showTransactionActions(
+      BuildContext context, Transaction transaction) async {
+    return showCupertinoModalPopup<Map>(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoActionSheet(
+          title: const Text('select an option'),
+          actions: [
+            CupertinoActionSheetAction(
+              isDestructiveAction: true,
+              child: const Text("delete"),
+              onPressed: () {
+                Navigator.pop(context);
+                deleteCallback(transaction);
+              },
+            ),
+            CupertinoActionSheetAction(
+              child: const Text("edit"),
+              onPressed: () {
+                Navigator.pop(context);
+                editCallback(transaction);
+              },
+            )
+          ],
+        );
+      },
     );
+  }
+
+  // Update the transaction depending on the operation
+  Future<void> editCallback(Transaction transaction) async {
+    if (transaction.operation == "cost") {
+      Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (context) => UpdateCostPage(
+            transaction: transaction,
+            user: widget.user,
+            currencies: widget.currencies,
+            costCategories: widget.costCategories,
+          ),
+        ),
+      );
+    } else if (transaction.operation == "income") {
+      throw Error();
+    } else if (transaction.operation == "exchange") {
+      throw Error();
+    } else {
+      throw Error();
+    }
+  }
+
+  // Delete the transaction depending on the operation
+  Future<void> deleteCallback(Transaction transaction) async {
+    ApiService api = ApiService();
+
+    setState(() {
+      _transactions.removeWhere((t) => t.id == transaction.id);
+    });
+
+    Navigator.pop(context);
+
+    if (transaction.operation == "cost") {
+      await api.deleteCost(transaction.id);
+    } else if (transaction.operation == "income") {
+      throw Error();
+    } else if (transaction.operation == "exchange") {
+      throw Error();
+    } else {
+      throw Error();
+    }
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:fambb_mobile/pages/add_cost.dart';
 import 'package:fambb_mobile/data/user.dart';
 import 'package:fambb_mobile/data/currency.dart';
-import 'package:fambb_mobile/data/transactions.dart';
+import 'package:fambb_mobile/data/cost.dart';
 
 class QuickActionsSection extends StatefulWidget {
   final User user;
@@ -21,17 +21,6 @@ class QuickActionsSection extends StatefulWidget {
 }
 
 class _QuickActionsSectionState extends State<QuickActionsSection> {
-  _goFormAddCost(BuildContext context) {
-    Navigator.push(
-        context,
-        CupertinoPageRoute(
-            builder: (context) => AddCostPage(
-                  user: widget.user,
-                  currencies: widget.currencies,
-                  costCategories: widget.costCategories,
-                )));
-  }
-
   @override
   void initState() {
     super.initState();
@@ -56,7 +45,16 @@ class _QuickActionsSectionState extends State<QuickActionsSection> {
                       color: CupertinoColors.white),
                 ),
                 onPressed: () {
-                  _goFormAddCost(context);
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => AddCostPage(
+                        user: widget.user,
+                        currencies: widget.currencies,
+                        costCategories: widget.costCategories,
+                      ),
+                    ),
+                  );
                 }),
           ],
         ),

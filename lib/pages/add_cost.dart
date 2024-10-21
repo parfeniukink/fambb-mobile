@@ -1,7 +1,6 @@
 import 'package:fambb_mobile/data/user.dart';
 import 'package:fambb_mobile/data/currency.dart';
 import 'package:fambb_mobile/data/cost.dart';
-import 'package:fambb_mobile/data/transactions.dart';
 import 'package:fambb_mobile/widgets/section.dart';
 import 'package:fambb_mobile/data/api.dart';
 import 'package:flutter/cupertino.dart';
@@ -39,23 +38,6 @@ class _AddCostPageState extends State<AddCostPage> {
 
   // just to represent the placeholder of the selected cost category
   late String _selectedCategoryPlaceholder;
-
-  Future<bool> _submitCallback(BuildContext context) async {
-    bool costIsCreated = await ApiService().addCost(
-      CostCreateBody(
-        name: name,
-        value: value,
-        timestamp: date,
-        currencyId: currencyId,
-        categoryId: categoryId,
-      ),
-    );
-    if (costIsCreated) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
   @override
   void initState() {
@@ -113,7 +95,7 @@ class _AddCostPageState extends State<AddCostPage> {
                           child: Text(_selectedCurrencyPlaceholder),
                           onPressed: () async {
                             var selectedCurrency =
-                                await _showCurrencyActionSheet(context);
+                                await showCurrencyActionSheet(context);
 
                             if (selectedCurrency != null) {
                               if (!mounted) return;
@@ -128,7 +110,7 @@ class _AddCostPageState extends State<AddCostPage> {
                           child: Text(_selectedCategoryPlaceholder),
                           onPressed: () async {
                             var selectedCategory =
-                                await _showCategoryActionSheet(context);
+                                await showCategoryActionSheet(context);
                             if (!mounted) return;
 
                             if (selectedCategory != null) {
@@ -180,7 +162,7 @@ class _AddCostPageState extends State<AddCostPage> {
                                 vertical: 10, horizontal: 20),
                             onPressed: () async {
                               Navigator.pop(context);
-                              await _submitCallback(context);
+                              await acceptCallback(context);
                             },
                             color: CupertinoColors.activeGreen,
                             child: const Text(
@@ -201,7 +183,19 @@ class _AddCostPageState extends State<AddCostPage> {
     );
   }
 
-  Future<Map?> _showCurrencyActionSheet(BuildContext context) async {
+  Future<bool> acceptCallback(BuildContext context) async {
+    return await ApiService().addCost(
+      CostCreateBody(
+        name: name,
+        value: value,
+        timestamp: date,
+        currencyId: currencyId,
+        categoryId: categoryId,
+      ),
+    );
+  }
+
+  Future<Map?> showCurrencyActionSheet(BuildContext context) async {
     return showCupertinoModalPopup<Map>(
       context: context,
       builder: (BuildContext context) {
@@ -220,7 +214,7 @@ class _AddCostPageState extends State<AddCostPage> {
     );
   }
 
-  Future<CostCategory?> _showCategoryActionSheet(BuildContext context) async {
+  Future<CostCategory?> showCategoryActionSheet(BuildContext context) async {
     return showCupertinoModalPopup<CostCategory>(
       context: context,
       builder: (BuildContext context) {

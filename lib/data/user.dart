@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import 'currency.dart';
-import 'transactions.dart';
+import 'cost.dart';
 
 part 'user.g.dart';
 

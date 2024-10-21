@@ -23,6 +23,7 @@ Map<String, dynamic> _$TransactionResultsToJson(TransactionResults instance) =>
     };
 
 Transaction _$TransactionFromJson(Map<String, dynamic> json) => Transaction(
+      id: (json['id'] as num).toInt(),
       operation: json['operation'] as String,
       name: json['name'] as String,
       value: (json['value'] as num).toDouble(),
@@ -32,33 +33,10 @@ Transaction _$TransactionFromJson(Map<String, dynamic> json) => Transaction(
 
 Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'operation': instance.operation,
       'name': instance.name,
       'value': instance.value,
       'timestamp': instance.timestamp,
       'currency': instance.currency,
-    };
-
-CostCategoryResults _$CostCategoryResultsFromJson(Map<String, dynamic> json) =>
-    CostCategoryResults(
-      result: (json['result'] as List<dynamic>)
-          .map((e) => CostCategory.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
-
-Map<String, dynamic> _$CostCategoryResultsToJson(
-        CostCategoryResults instance) =>
-    <String, dynamic>{
-      'result': instance.result,
-    };
-
-CostCategory _$CostCategoryFromJson(Map<String, dynamic> json) => CostCategory(
-      id: (json['id'] as num).toInt(),
-      name: json['name'] as String,
-    );
-
-Map<String, dynamic> _$CostCategoryToJson(CostCategory instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
     };

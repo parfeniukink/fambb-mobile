@@ -151,4 +151,66 @@ class ApiService {
     }
     return false; // Failed to create
   }
+
+  // Get existing cost.
+  // Returns `true` if updated
+  // Returns `false` if not updated
+  Future<Cost?> getCost(int costId) async {
+    try {
+      var response = await http.get(
+        Uri.parse("$baseUrl$costPath/$costId"),
+        headers: {"Content-Type": "application/json"},
+      );
+
+      if (response.statusCode == 200) {
+        return CostResults.fromJson(json.decode(response.body)).result;
+      } else {}
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
+  }
+
+  // Update existing cost.
+  // Returns `true` if updated
+  // Returns `false` if not updated
+  Future<bool> updateCost(int costId, CostUpdateBody costUpdateBody) async {
+    try {
+      var response = await http.patch(
+        Uri.parse(
+          "$baseUrl$costPath/$costId",
+        ),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(costUpdateBody.toJson()),
+      );
+
+      if (response.statusCode == 200) {
+        return true; // Successfully updated
+      } else {}
+    } catch (e) {
+      log(e.toString());
+    }
+    return false; // Failed to update
+  }
+
+  // Delete existing cost.
+  // Returns `true` if deleted
+  // Returns `false` if not deleted
+  Future<bool> deleteCost(int costId) async {
+    try {
+      var response = await http.delete(
+        Uri.parse(
+          "$baseUrl$costPath/$costId",
+        ),
+        headers: {"Content-Type": "application/json"},
+      );
+
+      if (response.statusCode == 200) {
+        return true; // Successfully updated
+      } else {}
+    } catch (e) {
+      log(e.toString());
+    }
+    return false; // Failed to update
+  }
 }
