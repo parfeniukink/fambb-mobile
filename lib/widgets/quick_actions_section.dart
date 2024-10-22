@@ -1,3 +1,4 @@
+import 'package:fambb_mobile/pages/add_exchange.dart';
 import 'package:fambb_mobile/pages/add_income.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fambb_mobile/pages/add_cost.dart';
@@ -100,7 +101,17 @@ class _QuickActionsSectionState extends State<QuickActionsSection> {
                       fontWeight: FontWeight.w900,
                       color: CupertinoColors.white),
                 ),
-                onPressed: () {}),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => ExchangeCreatePage(
+                        user: widget.user,
+                        currencies: widget.currencies,
+                      ),
+                    ),
+                  );
+                }),
           ],
         ),
       ],

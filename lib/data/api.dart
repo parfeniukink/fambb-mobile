@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:fambb_mobile/data/exchange.dart';
 import 'package:fambb_mobile/data/income.dart';
 import 'package:http/http.dart' as http;
 import 'package:fambb_mobile/data/equity.dart';
@@ -298,6 +299,24 @@ class ApiService {
 
   // Currency exchange section
   // -----------------------------------------
+  Future<bool> addExchange(ExchangeCreateBody body) async {
+    try {
+      var response = await http.post(
+        Uri.parse(
+          "$baseUrl/exchange",
+        ),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(body.toJson()),
+      );
+
+      if (response.statusCode == 201) {
+        return true;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return false;
+  }
 
   // Delete existing income.
   // Returns `true` if deleted
