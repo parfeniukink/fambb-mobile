@@ -325,7 +325,7 @@ class ApiService {
     try {
       var response = await http.delete(
         Uri.parse(
-          "$baseUrl/exchanges/$exchangeId",
+          "$baseUrl/exchange/$exchangeId",
         ),
         headers: {"Content-Type": "application/json"},
       );
