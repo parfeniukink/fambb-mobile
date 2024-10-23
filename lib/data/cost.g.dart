@@ -94,3 +94,51 @@ Map<String, dynamic> _$CostUpdateBodyToJson(CostUpdateBody instance) =>
       'currencyId': instance.currencyId,
       'categoryId': instance.categoryId,
     };
+
+CostShortcutCreateBody _$CostShortcutCreateBodyFromJson(
+        Map<String, dynamic> json) =>
+    CostShortcutCreateBody(
+      name: json['name'] as String,
+      value: (json['value'] as num?)?.toDouble(),
+      currency: Currency.fromJson(json['currency'] as Map<String, dynamic>),
+      category: CostCategory.fromJson(json['category'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$CostShortcutCreateBodyToJson(
+        CostShortcutCreateBody instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'value': instance.value,
+      'currency': instance.currency,
+      'category': instance.category,
+    };
+
+CostShortcut _$CostShortcutFromJson(Map<String, dynamic> json) => CostShortcut(
+      id: (json['id'] as num).toInt(),
+      name: json['name'] as String,
+      value: (json['value'] as num?)?.toDouble(),
+      currency: Currency.fromJson(json['currency'] as Map<String, dynamic>),
+      category: CostCategory.fromJson(json['category'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$CostShortcutToJson(CostShortcut instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'value': instance.value,
+      'currency': instance.currency,
+      'category': instance.category,
+    };
+
+CostShortcutResults _$CostShortcutResultsFromJson(Map<String, dynamic> json) =>
+    CostShortcutResults(
+      result: (json['result'] as List<dynamic>)
+          .map((e) => CostShortcut.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$CostShortcutResultsToJson(
+        CostShortcutResults instance) =>
+    <String, dynamic>{
+      'result': instance.result,
+    };

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:fambb_mobile/data/api.dart';
 import 'package:fambb_mobile/data/currency.dart';
 import 'package:fambb_mobile/data/cost.dart';

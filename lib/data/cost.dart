@@ -108,3 +108,56 @@ class CostUpdateBody {
       _$CostUpdateBodyFromJson(json);
   Map<String, dynamic> toJson() => _$CostUpdateBodyToJson(this);
 }
+
+@JsonSerializable()
+class CostShortcutCreateBody {
+  final String name;
+  final double? value;
+  final Currency currency;
+  final CostCategory category;
+
+  CostShortcutCreateBody({
+    required this.name,
+    required this.value,
+    required this.currency,
+    required this.category,
+  });
+
+  factory CostShortcutCreateBody.fromJson(Map<String, dynamic> json) =>
+      _$CostShortcutCreateBodyFromJson(json);
+  Map<String, dynamic> toJson() => _$CostShortcutCreateBodyToJson(this);
+}
+
+@JsonSerializable()
+class CostShortcut {
+  final int id;
+  final String name;
+  final double? value;
+  final Currency currency;
+  final CostCategory category;
+
+  CostShortcut({
+    required this.id,
+    required this.name,
+    required this.value,
+    required this.currency,
+    required this.category,
+  });
+
+  factory CostShortcut.fromJson(Map<String, dynamic> json) =>
+      _$CostShortcutFromJson(json);
+  Map<String, dynamic> toJson() => _$CostShortcutToJson(this);
+}
+
+@JsonSerializable()
+class CostShortcutResults {
+  final List<CostShortcut> result;
+
+  CostShortcutResults({
+    required this.result,
+  });
+
+  factory CostShortcutResults.fromJson(Map<String, dynamic> json) =>
+      _$CostShortcutResultsFromJson(json);
+  Map<String, dynamic> toJson() => _$CostShortcutResultsToJson(this);
+}

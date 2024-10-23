@@ -338,4 +338,23 @@ class ApiService {
     }
     return false; // Failed to update
   }
+
+  // Cost Shortcuts section
+  // -----------------------------------------
+  Future<List<CostShortcut>?> fetchCostShortcuts() async {
+    try {
+      var url = Uri.parse("$baseUrl/costs/shortcuts");
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        var results = CostShortcutResults.fromJson(json.decode(response.body));
+        return results.result;
+      } else {
+        log('Failed to load cost shortcuts');
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
+  }
 }
