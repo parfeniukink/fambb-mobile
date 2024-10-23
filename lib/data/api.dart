@@ -342,6 +342,29 @@ class ApiService {
   // Cost Shortcuts section
   // -----------------------------------------
 
+  // Add yet another cost.
+  // Returns `true` if created
+  // Returns `false` if not created
+  Future<bool> addCostShortcut(CostShortcutCreateBody body) async {
+    try {
+      var response = await http.post(
+        Uri.parse("$baseUrl/costs/shortcuts"),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(body.toJson()),
+      );
+
+      if (response.statusCode == 201) {
+        log('Cost shortcut created successfully');
+        return true; // Successfully created
+      } else {
+        log('Failed to create cost shortcut. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return false; // Failed to create
+  }
+
   // Fetch all the cost shortcuts from the API
   Future<List<CostShortcut>?> fetchCostShortcuts() async {
     try {

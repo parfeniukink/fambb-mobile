@@ -113,14 +113,14 @@ class CostUpdateBody {
 class CostShortcutCreateBody {
   final String name;
   final double? value;
-  final Currency currency;
-  final CostCategory category;
+  final int currencyId;
+  final int categoryId;
 
   CostShortcutCreateBody({
     required this.name,
     required this.value,
-    required this.currency,
-    required this.category,
+    required this.currencyId,
+    required this.categoryId,
   });
 
   factory CostShortcutCreateBody.fromJson(Map<String, dynamic> json) =>

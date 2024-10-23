@@ -41,7 +41,7 @@ class _QuickActionsSectionState extends State<QuickActionsSection> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 60),
                 child: const Text(
-                  "Add Cost",
+                  "💸 Cost",
                   style: TextStyle(
                       fontWeight: FontWeight.w900,
                       color: CupertinoColors.white),
@@ -69,7 +69,7 @@ class _QuickActionsSectionState extends State<QuickActionsSection> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 60),
                 child: const Text(
-                  "Add Income",
+                  "🤑 Income",
                   style: TextStyle(
                       fontWeight: FontWeight.w900,
                       color: CupertinoColors.white),

@@ -1,16 +1,16 @@
-import 'package:fambb_mobile/data/user.dart';
-import 'package:fambb_mobile/data/currency.dart';
-import 'package:fambb_mobile/data/cost.dart';
-import 'package:fambb_mobile/widgets/section.dart';
 import 'package:fambb_mobile/data/api.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fambb_mobile/data/cost.dart';
+import 'package:fambb_mobile/data/currency.dart';
+import 'package:fambb_mobile/data/user.dart';
+import 'package:fambb_mobile/widgets/section.dart';
 
-class AddCostPage extends StatefulWidget {
+class AddCostShortcutPage extends StatefulWidget {
   final User user;
   final List<Currency> currencies;
   final List<CostCategory> costCategories;
 
-  const AddCostPage({
+  const AddCostShortcutPage({
     super.key,
     required this.user,
     required this.currencies,
@@ -18,14 +18,13 @@ class AddCostPage extends StatefulWidget {
   });
 
   @override
-  State<AddCostPage> createState() => _AddCostPageState();
+  State<AddCostShortcutPage> createState() => _AddCostShortcutPage();
 }
 
-class _AddCostPageState extends State<AddCostPage> {
+class _AddCostShortcutPage extends State<AddCostShortcutPage> {
   // data state
-  DateTime date = DateTime.now();
   late String name;
-  late double value;
+  double? value;
   late int currencyId;
   late int categoryId;
 
@@ -72,25 +71,12 @@ class _AddCostPageState extends State<AddCostPage> {
             padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
             child: Column(
               children: [
-                const SizedBox(height: 40),
+                const SizedBox(height: 120),
                 Section(
-                  title: "💸 Cost",
+                  title: "💸 Cost Shortcut",
                   border: 3,
                   child: Column(
                     children: [
-                      SizedBox(
-                        height: 200, // Specify the height you want
-                        child: CupertinoDatePicker(
-                          initialDateTime: date,
-                          mode: CupertinoDatePickerMode.date,
-                          use24hFormat: true,
-                          showDayOfWeek: true,
-                          onDateTimeChanged: (DateTime newDate) {
-                            setState(() => date = newDate);
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 20),
                       CupertinoButton(
                           child: Text(_selectedCurrencyPlaceholder),
                           onPressed: () async {
@@ -125,7 +111,7 @@ class _AddCostPageState extends State<AddCostPage> {
                       const SizedBox(height: 20),
                       CupertinoTextField(
                         placeholder: "name",
-                        onChanged: (value) {
+                        onChanged: (String value) {
                           setState(() {
                             name = value;
                           });
@@ -135,9 +121,10 @@ class _AddCostPageState extends State<AddCostPage> {
                       CupertinoTextField(
                         placeholder: "value",
                         keyboardType: TextInputType.number,
-                        onChanged: (value) {
+                        onChanged: (String? value) {
                           setState(() {
-                            this.value = double.tryParse(value) ?? 0.0;
+                            this.value =
+                                (value != null) ? double.tryParse(value) : null;
                           });
                         },
                       ),
@@ -162,7 +149,14 @@ class _AddCostPageState extends State<AddCostPage> {
                                 vertical: 10, horizontal: 20),
                             onPressed: () async {
                               Navigator.pop(context);
-                              acceptCallback(context);
+                              await ApiService().addCostShortcut(
+                                CostShortcutCreateBody(
+                                  name: name,
+                                  value: value,
+                                  currencyId: currencyId,
+                                  categoryId: categoryId,
+                                ),
+                              );
                             },
                             color: CupertinoColors.activeGreen,
                             child: const Text(
@@ -180,18 +174,6 @@ class _AddCostPageState extends State<AddCostPage> {
               ],
             )),
       )),
-    );
-  }
-
-  Future<bool> acceptCallback(BuildContext context) async {
-    return await ApiService().addCost(
-      CostCreateBody(
-        name: name,
-        value: value,
-        timestamp: date,
-        currencyId: currencyId,
-        categoryId: categoryId,
-      ),
     );
   }
 

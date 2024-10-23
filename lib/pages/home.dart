@@ -99,14 +99,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _fetchUser() async {
-    User? result = await api.fetchUser();
+      User? result = await api.fetchUser();
 
-    if (result != null) {
-      if (!mounted) return;
-      setState(() {
-        _user = result;
-      });
-    }
+      if (result != null) {
+          if (!mounted) return;
+          setState(() {
+              _user = result;
+          });
+      }
   }
 
   Future<void> _fetchCurrencies() async {

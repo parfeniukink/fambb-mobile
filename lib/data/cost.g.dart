@@ -100,8 +100,8 @@ CostShortcutCreateBody _$CostShortcutCreateBodyFromJson(
     CostShortcutCreateBody(
       name: json['name'] as String,
       value: (json['value'] as num?)?.toDouble(),
-      currency: Currency.fromJson(json['currency'] as Map<String, dynamic>),
-      category: CostCategory.fromJson(json['category'] as Map<String, dynamic>),
+      currencyId: (json['currencyId'] as num).toInt(),
+      categoryId: (json['categoryId'] as num).toInt(),
     );
 
 Map<String, dynamic> _$CostShortcutCreateBodyToJson(
@@ -109,8 +109,8 @@ Map<String, dynamic> _$CostShortcutCreateBodyToJson(
     <String, dynamic>{
       'name': instance.name,
       'value': instance.value,
-      'currency': instance.currency,
-      'category': instance.category,
+      'currencyId': instance.currencyId,
+      'categoryId': instance.categoryId,
     };
 
 CostShortcut _$CostShortcutFromJson(Map<String, dynamic> json) => CostShortcut(
