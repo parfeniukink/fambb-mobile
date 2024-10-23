@@ -62,7 +62,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
               children: [
                 const SizedBox(height: 40),
                 Section(
-                  title: " 🟢 Add Income",
+                  title: "🤑 Income",
                   border: 3,
                   child: Column(
                     children: [
@@ -187,7 +187,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
       context: context,
       builder: (BuildContext context) {
         return CupertinoActionSheet(
-          title: const Text('Select a currency'),
+          title: const Text('select currency'),
           actions: _currenciesForModal.map((item) {
             return CupertinoActionSheetAction(
               child: Text(item["placeholder"]),
@@ -207,7 +207,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
       builder: (BuildContext context) {
         List<String> actions = ["revenue", "gift", "debt", "other"];
         return CupertinoActionSheet(
-          title: const Text('Select a source'),
+          title: const Text('select source'),
           actions: actions.map((item) {
             return CupertinoActionSheetAction(
               child: Text(item),

@@ -122,7 +122,7 @@ class _LastTransactionsPageState extends State<LastTransactionsPage> {
                 : () => getTransactions(loadMore: true),
             child: _hasMoreTransaction
                 ? const CupertinoActivityIndicator()
-                : const Text("load more"),
+                : const Text("more"),
           ),
         ),
       );
@@ -210,7 +210,7 @@ class _LastTransactionsPageState extends State<LastTransactionsPage> {
         }
 
         return CupertinoActionSheet(
-          title: const Text('select an option'),
+          title: const Text('select option'),
           actions: actions,
         );
       },

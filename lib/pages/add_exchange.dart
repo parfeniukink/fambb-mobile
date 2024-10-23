@@ -48,10 +48,10 @@ class _ExchangeCreatePageState extends State<ExchangeCreatePage> {
     final Currency? defaultCurrency = widget.user.configuration.defaultCurrency;
     _selectedFromCurrencyPlaceholder = (defaultCurrency != null)
         ? "${defaultCurrency.name} - ${defaultCurrency.sign}"
-        : "Select From Currency";
+        : "from currency";
     _selectedToCurrencyPlaceholder = (defaultCurrency != null)
         ? "${defaultCurrency.name} - ${defaultCurrency.sign}"
-        : "Select To Currency";
+        : "to currency";
   }
 
   @override
@@ -65,7 +65,7 @@ class _ExchangeCreatePageState extends State<ExchangeCreatePage> {
               children: [
                 const SizedBox(height: 40),
                 Section(
-                  title: " 💱 Currency Exchange",
+                  title: "💱 Currency Exchange",
                   border: 3,
                   child: Column(
                     children: [
@@ -114,7 +114,7 @@ class _ExchangeCreatePageState extends State<ExchangeCreatePage> {
                       ),
                       const SizedBox(height: 20),
                       CupertinoTextField(
-                        placeholder: "From Value",
+                        placeholder: "from value",
                         keyboardType: TextInputType.number,
                         onChanged: (value) {
                           setState(() {
@@ -124,7 +124,7 @@ class _ExchangeCreatePageState extends State<ExchangeCreatePage> {
                       ),
                       const SizedBox(height: 20),
                       CupertinoTextField(
-                        placeholder: "To Value",
+                        placeholder: "to value",
                         keyboardType: TextInputType.number,
                         onChanged: (value) {
                           setState(() {
@@ -142,7 +142,7 @@ class _ExchangeCreatePageState extends State<ExchangeCreatePage> {
                             onPressed: () => Navigator.pop(context),
                             color: CupertinoColors.systemRed,
                             child: const Text(
-                              "Reject",
+                              "reject",
                               style: TextStyle(
                                 color: CupertinoColors.white,
                               ),
@@ -157,7 +157,7 @@ class _ExchangeCreatePageState extends State<ExchangeCreatePage> {
                             },
                             color: CupertinoColors.activeGreen,
                             child: const Text(
-                              "Submit",
+                              "submit",
                               style: TextStyle(
                                 color: CupertinoColors.white,
                               ),
@@ -194,8 +194,9 @@ class _ExchangeCreatePageState extends State<ExchangeCreatePage> {
       context: context,
       builder: (BuildContext context) {
         return CupertinoActionSheet(
-          title: Text(
-              isFromCurrency ? 'Select From Currency' : 'Select To Currency'),
+          title: Text(isFromCurrency
+              ? "select 'from currency'"
+              : "select 'to currency'"),
           actions: _currenciesForModal.map((item) {
             return CupertinoActionSheetAction(
               child: Text(item["placeholder"]),

@@ -1,5 +1,9 @@
+// import 'package:fambb_mobile/data/api.dart';
+import 'package:fambb_mobile/pages/apply_shortcut.dart';
+import 'package:fambb_mobile/widgets/popup.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fambb_mobile/data/cost.dart';
+import 'package:fambb_mobile/data/api.dart';
 
 class CostShortcutCard extends StatelessWidget {
   final CostShortcut shortcut;
@@ -9,7 +13,24 @@ class CostShortcutCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: tapOnCard,
+      onTap: () async {
+        if (shortcut.value == null) {
+          await Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => ApplyShortcutPage(costShortcut: shortcut),
+            ),
+          );
+        } else {
+          ApiService().applyCostShortcut(shortcut.id, shortcut.value);
+          // TODO: update the message depending on the api call result
+          showPopup(
+            context,
+            color: CupertinoColors.activeGreen,
+            message: "saved",
+          );
+        }
+      },
       child: Container(
         margin: const EdgeInsets.all(8.0),
         padding: const EdgeInsets.all(16.0),
@@ -47,9 +68,5 @@ class CostShortcutCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void tapOnCard() {
-    print(shortcut.name);
   }
 }

@@ -341,6 +341,8 @@ class ApiService {
 
   // Cost Shortcuts section
   // -----------------------------------------
+
+  // Fetch all the cost shortcuts from the API
   Future<List<CostShortcut>?> fetchCostShortcuts() async {
     try {
       var url = Uri.parse("$baseUrl/costs/shortcuts");
@@ -356,5 +358,26 @@ class ApiService {
       log(e.toString());
     }
     return null;
+  }
+
+  // Apply selected cost shortcut
+  // -----------------------------------------
+  Future<bool> applyCostShortcut(int shortcutId, double? value) async {
+    try {
+      var response = await http.post(
+        Uri.parse(
+          "$baseUrl/costs/shortcuts/$shortcutId",
+        ),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({"value": value}),
+      );
+
+      if (response.statusCode == 201) {
+        return true;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return false;
   }
 }

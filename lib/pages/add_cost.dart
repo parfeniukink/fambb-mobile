@@ -74,7 +74,7 @@ class _AddCostPageState extends State<AddCostPage> {
               children: [
                 const SizedBox(height: 40),
                 Section(
-                  title: "🔻 Add a Cost",
+                  title: "💸 Cost",
                   border: 3,
                   child: Column(
                     children: [
@@ -162,7 +162,7 @@ class _AddCostPageState extends State<AddCostPage> {
                                 vertical: 10, horizontal: 20),
                             onPressed: () async {
                               Navigator.pop(context);
-                              await acceptCallback(context);
+                              acceptCallback(context);
                             },
                             color: CupertinoColors.activeGreen,
                             child: const Text(

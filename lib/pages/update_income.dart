@@ -59,7 +59,7 @@ class _UpdateIncomePageState extends State<UpdateIncomePage> {
                     children: [
                       const SizedBox(height: 40),
                       Section(
-                        title: "🔻 Update the Income",
+                        title: "🤑 Update Income",
                         border: 3,
                         child: Column(
                           children: [
@@ -215,7 +215,7 @@ class _UpdateIncomePageState extends State<UpdateIncomePage> {
       context: context,
       builder: (BuildContext context) {
         return CupertinoActionSheet(
-          title: const Text('Select a currency'),
+          title: const Text('select currency'),
           actions: _currenciesForModal.map((item) {
             return CupertinoActionSheetAction(
               child: Text(item["placeholder"]),
@@ -235,7 +235,7 @@ class _UpdateIncomePageState extends State<UpdateIncomePage> {
       context: context,
       builder: (BuildContext context) {
         return CupertinoActionSheet(
-          title: const Text('Select a source'),
+          title: const Text('select source'),
           actions: sources.map((source) {
             return CupertinoActionSheetAction(
               child: Text(source),

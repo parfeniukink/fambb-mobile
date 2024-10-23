@@ -61,7 +61,7 @@ class _UpdateCostPageState extends State<UpdateCostPage> {
                     children: [
                       const SizedBox(height: 40),
                       Section(
-                        title: "🔻 Update the Cost",
+                        title: "💸 Update Cost",
                         border: 3,
                         child: Column(
                           children: [
@@ -218,7 +218,7 @@ class _UpdateCostPageState extends State<UpdateCostPage> {
       context: context,
       builder: (BuildContext context) {
         return CupertinoActionSheet(
-          title: const Text('Select a currency'),
+          title: const Text('select currency'),
           actions: _currenciesForModal.map((item) {
             return CupertinoActionSheetAction(
               child: Text(item["placeholder"]),
@@ -237,7 +237,7 @@ class _UpdateCostPageState extends State<UpdateCostPage> {
       context: context,
       builder: (BuildContext context) {
         return CupertinoActionSheet(
-          title: const Text('Select a category'),
+          title: const Text('select category'),
           actions: widget.costCategories.map((category) {
             return CupertinoActionSheetAction(
               child: Text(category.name),
