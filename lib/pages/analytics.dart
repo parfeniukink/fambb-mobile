@@ -20,7 +20,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         : const Column(mainAxisAlignment: MainAxisAlignment.start, children: [
             Section(
                 border: 3,
-                title: "📊 Basic Analytics",
+                title: "📊 Analytics",
                 child:
                     Row(children: [Center(child: Text("🚧 Work in progress"))]))
           ]);
