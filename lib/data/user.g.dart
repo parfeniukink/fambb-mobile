@@ -28,6 +28,20 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'configuration': instance.configuration,
     };
 
+UserConfigurationUpdateBody _$UserConfigurationUpdateBodyFromJson(
+        Map<String, dynamic> json) =>
+    UserConfigurationUpdateBody(
+      defaultCurrencyId: (json['defaultCurrencyId'] as num?)?.toInt(),
+      defaultCostCategoryId: (json['defaultCostCategoryId'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$UserConfigurationUpdateBodyToJson(
+        UserConfigurationUpdateBody instance) =>
+    <String, dynamic>{
+      'defaultCurrencyId': instance.defaultCurrencyId,
+      'defaultCostCategoryId': instance.defaultCostCategoryId,
+    };
+
 UserConfiguration _$UserConfigurationFromJson(Map<String, dynamic> json) =>
     UserConfiguration(
       defaultCurrency: json['defaultCurrency'] == null
@@ -37,18 +51,10 @@ UserConfiguration _$UserConfigurationFromJson(Map<String, dynamic> json) =>
           ? null
           : CostCategory.fromJson(
               json['defaultCostCategory'] as Map<String, dynamic>),
-      commonCosts: (json['commonCosts'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
-      commonIncomes: (json['commonIncomes'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
     );
 
 Map<String, dynamic> _$UserConfigurationToJson(UserConfiguration instance) =>
     <String, dynamic>{
       'defaultCurrency': instance.defaultCurrency,
       'defaultCostCategory': instance.defaultCostCategory,
-      'commonCosts': instance.commonCosts,
-      'commonIncomes': instance.commonIncomes,
     };

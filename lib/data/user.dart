@@ -5,6 +5,7 @@ import 'cost.dart';
 
 part 'user.g.dart';
 
+// API user response
 @JsonSerializable()
 class UserResults {
   final User result;
@@ -18,6 +19,7 @@ class UserResults {
   Map<String, dynamic> toJson() => _$UserResultsToJson(this);
 }
 
+// public user representation
 @JsonSerializable()
 class User {
   final int id;
@@ -34,18 +36,30 @@ class User {
   Map<String, dynamic> toJson() => _$UserToJson(this);
 }
 
+// update the user configuration HTTP request body
+@JsonSerializable()
+class UserConfigurationUpdateBody {
+  int? defaultCurrencyId;
+  int? defaultCostCategoryId;
+
+  UserConfigurationUpdateBody({
+    this.defaultCurrencyId,
+    this.defaultCostCategoryId,
+  });
+  factory UserConfigurationUpdateBody.fromJson(Map<String, dynamic> json) =>
+      _$UserConfigurationUpdateBodyFromJson(json);
+  Map<String, dynamic> toJson() => _$UserConfigurationUpdateBodyToJson(this);
+}
+
+// public user configuration representation
 @JsonSerializable()
 class UserConfiguration {
   final Currency? defaultCurrency;
   final CostCategory? defaultCostCategory;
-  final List<String>? commonCosts;
-  final List<String>? commonIncomes;
 
   UserConfiguration({
     this.defaultCurrency,
     this.defaultCostCategory,
-    this.commonCosts,
-    this.commonIncomes,
   });
 
   factory UserConfiguration.fromJson(Map<String, dynamic> json) =>

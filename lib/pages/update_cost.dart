@@ -98,10 +98,8 @@ class _UpdateCostPageState extends State<UpdateCostPage> {
                                 onPressed: () async {
                                   var selectedCategory =
                                       await _showCategoryActionSheet(context);
-                                  if (!mounted) return;
 
-                                  if (selectedCategory != null) {
-                                    if (!mounted) return;
+                                  if (selectedCategory != null && mounted) {
                                     setState(() {
                                       _selectedCategoryPlaceholder =
                                           selectedCategory.name;
@@ -120,7 +118,9 @@ class _UpdateCostPageState extends State<UpdateCostPage> {
                             ),
                             const SizedBox(height: 20),
                             CupertinoTextField(
-                              placeholder: (value != null) ? value.toString() : "loading",
+                              placeholder: (value != null)
+                                  ? value.toString()
+                                  : "loading",
                               keyboardType: TextInputType.number,
                               onChanged: (value) {
                                 setState(() {

@@ -103,8 +103,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _fetchUser() async {
     User? result = await api.fetchUser();
 
-    if (result != null) {
-      if (!mounted) return;
+    if (result != null && mounted) {
       setState(() {
         _user = result;
       });
@@ -114,8 +113,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _fetchCurrencies() async {
     List<Currency>? results = await api.fetchCurrencies();
 
-    if (results != null) {
-      if (!mounted) return;
+    if (results != null && mounted) {
       setState(() {
         _currencies = results;
       });
@@ -125,8 +123,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _fetchCostCategories() async {
     List<CostCategory>? results = await api.fetchCostCategories();
 
-    if (results != null) {
-      if (!mounted) return;
+    if (results != null && mounted) {
       setState(() {
         _costCategories = results;
       });
@@ -137,8 +134,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _fetchLastTransactions() async {
     TransactionResults? transactionResults = await api.fetchTransactions();
 
-    if (transactionResults != null) {
-      if (!mounted) return;
+    if (transactionResults != null && mounted) {
       setState(() {
         _lastTransactions = transactionResults.result;
       });
@@ -149,8 +145,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _fetchEquity() async {
     List<Equity>? equityData = await api.fetchEquity();
 
-    if (equityData != null) {
-      if (!mounted) return;
+    if (equityData != null && mounted) {
       setState(() {
         _equityData = equityData;
       });

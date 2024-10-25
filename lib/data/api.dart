@@ -155,8 +155,6 @@ class ApiService {
   }
 
   // Get existing cost.
-  // Returns `true` if updated
-  // Returns `false` if not updated
   Future<Cost?> getCost(int costId) async {
     try {
       var response = await http.get(
@@ -331,12 +329,12 @@ class ApiService {
       );
 
       if (response.statusCode == 204) {
-        return true; // Successfully updated
+        return true;
       } else {}
     } catch (e) {
       log(e.toString());
     }
-    return false; // Failed to update
+    return false;
   }
 
   // Cost Shortcuts section
@@ -402,5 +400,25 @@ class ApiService {
       log(e.toString());
     }
     return false;
+  }
+
+  // update user settings
+  Future<bool> updateUserConfiguration(UserConfigurationUpdateBody body) async {
+    try {
+      var response = await http.put(
+        Uri.parse(
+          "$baseUrl/users/configuration",
+        ),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(body.toJson()),
+      );
+
+      if (response.statusCode == 200) {
+        return true; // Successfully updated
+      } else {}
+    } catch (e) {
+      log(e.toString());
+    }
+    return false; // Failed to update
   }
 }

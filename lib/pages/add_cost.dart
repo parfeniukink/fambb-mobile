@@ -195,6 +195,8 @@ class _AddCostPageState extends State<AddCostPage> {
     );
   }
 
+  // show currencies as `Map`.
+  // note: look into the `initState` for more details
   Future<Map?> showCurrencyActionSheet(BuildContext context) async {
     return showCupertinoModalPopup<Map>(
       context: context,
@@ -214,6 +216,7 @@ class _AddCostPageState extends State<AddCostPage> {
     );
   }
 
+  // Show cost categories and return objects on select
   Future<CostCategory?> showCategoryActionSheet(BuildContext context) async {
     return showCupertinoModalPopup<CostCategory>(
       context: context,
