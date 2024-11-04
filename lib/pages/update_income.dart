@@ -152,7 +152,7 @@ class _UpdateIncomePageState extends State<UpdateIncomePage> {
                                   },
                                   color: CupertinoColors.activeGreen,
                                   child: const Text(
-                                    "submit",
+                                    "confirm",
                                     style: TextStyle(
                                       color: CupertinoColors.white,
                                     ),

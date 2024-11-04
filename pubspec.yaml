@@ -38,6 +38,10 @@ dependencies:
 
   # data validation
   json_annotation: ^4.8.0
+  intl: ^0.17.0
+
+  # secrets
+  flutter_secure_storage: ^9.2.2
 
 dev_dependencies:
   flutter_test:

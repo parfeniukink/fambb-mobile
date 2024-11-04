@@ -20,7 +20,7 @@ Map<String, dynamic> _$EquityResultsToJson(EquityResults instance) =>
 
 Equity _$EquityFromJson(Map<String, dynamic> json) => Equity(
       currency: Currency.fromJson(json['currency'] as Map<String, dynamic>),
-      amount: (json['amount'] as num).toInt(),
+      amount: (json['amount'] as num).toDouble(),
     );
 
 Map<String, dynamic> _$EquityToJson(Equity instance) => <String, dynamic>{

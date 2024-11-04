@@ -1,13 +1,16 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:intl/intl.dart';
 
 import 'package:fambb_mobile/data/exchange.dart';
 import 'package:fambb_mobile/data/income.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:fambb_mobile/data/equity.dart';
 import 'package:fambb_mobile/data/transactions.dart';
 import 'package:fambb_mobile/data/currency.dart';
 import 'package:fambb_mobile/data/user.dart';
+import 'package:fambb_mobile/data/analytics.dart';
 import 'package:fambb_mobile/data/cost.dart';
 
 const String baseUrl = "http://localhost:8000";
@@ -19,15 +22,29 @@ const String analyticsEquityPath = "/analytics/equity";
 const String analyticsTransactionsPath = "/analytics/transactions";
 
 class ApiService {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+
+  Future<Map<String, String>> _getHeaders() async {
+    final secret = await _storage.read(key: 'userSecret');
+    return {
+      "Content-Type": "application/json",
+      if (secret != null) "Authorization": "Bearer $secret",
+    };
+  }
+
+  Map<String, dynamic> decodeJson(http.Response response) {
+    return json.decode(utf8.decode(response.bodyBytes));
+  }
+
   // Get all the equity data
   // -----------------------------------------
   Future<User?> fetchUser() async {
     try {
       var url = Uri.parse(baseUrl + usersPath);
-      var response = await http.get(url);
+      var response = await http.get(url, headers: await _getHeaders());
 
       if (response.statusCode == 200) {
-        var userResult = UserResults.fromJson(json.decode(response.body));
+        var userResult = UserResults.fromJson(decodeJson(response));
         return userResult.result;
       } else {
         log('Failed to load equity data');
@@ -43,10 +60,10 @@ class ApiService {
   Future<List<Equity>?> fetchEquity() async {
     try {
       var url = Uri.parse(baseUrl + analyticsEquityPath);
-      var response = await http.get(url);
+      var response = await http.get(url, headers: await _getHeaders());
 
       if (response.statusCode == 200) {
-        var equityResults = EquityResults.fromJson(json.decode(response.body));
+        var equityResults = EquityResults.fromJson(decodeJson(response));
         return equityResults.result;
       } else {
         log('Failed to load equity data');
@@ -62,11 +79,10 @@ class ApiService {
   Future<List<Currency>?> fetchCurrencies() async {
     try {
       var url = Uri.parse(baseUrl + currenciesPath);
-      var response = await http.get(url);
+      var response = await http.get(url, headers: await _getHeaders());
 
       if (response.statusCode == 200) {
-        var currencyResults =
-            CurrencyResults.fromJson(json.decode(response.body));
+        var currencyResults = CurrencyResults.fromJson(decodeJson(response));
         return currencyResults.result;
       } else {
         log('Failed to load currencies');
@@ -82,11 +98,12 @@ class ApiService {
   Future<List<CostCategory>?> fetchCostCategories() async {
     try {
       var url = Uri.parse(baseUrl + costCategoriesPath);
-      var response = await http.get(url);
+      http.Response response =
+          await http.get(url, headers: await _getHeaders());
 
       if (response.statusCode == 200) {
         var costCategoryResults =
-            CostCategoryResults.fromJson(json.decode(response.body));
+            CostCategoryResults.fromJson(decodeJson(response));
         return costCategoryResults.result;
       } else {
         log('Failed to load cost categories');
@@ -113,12 +130,12 @@ class ApiService {
             "$baseUrl$analyticsTransactionsPath?currencyId=$currency&context=$context&limit=$limit");
       }
 
-      var response = await http.get(url);
+      var response = await http.get(url, headers: await _getHeaders());
 
       if (response.statusCode == 200) {
         // Parse the JSON response into the TransactionResults object
         TransactionResults transactionResults =
-            TransactionResults.fromJson(json.decode(response.body));
+            TransactionResults.fromJson(decodeJson(response));
         return transactionResults; // Return the full result with context and left
       } else {
         log("Failed to load transactions. Status code: ${response.statusCode}");
@@ -138,7 +155,7 @@ class ApiService {
         Uri.parse(
           "$baseUrl$costPath",
         ),
-        headers: {"Content-Type": "application/json"},
+        headers: await _getHeaders(),
         body: json.encode(costCreateBody.toJson()),
       );
 
@@ -159,11 +176,11 @@ class ApiService {
     try {
       var response = await http.get(
         Uri.parse("$baseUrl$costPath/$costId"),
-        headers: {"Content-Type": "application/json"},
+        headers: await _getHeaders(),
       );
 
       if (response.statusCode == 200) {
-        return CostResults.fromJson(json.decode(response.body)).result;
+        return CostResults.fromJson(decodeJson(response)).result;
       } else {}
     } catch (e) {
       log(e.toString());
@@ -180,7 +197,7 @@ class ApiService {
         Uri.parse(
           "$baseUrl$costPath/$costId",
         ),
-        headers: {"Content-Type": "application/json"},
+        headers: await _getHeaders(),
         body: json.encode(costUpdateBody.toJson()),
       );
 
@@ -202,7 +219,7 @@ class ApiService {
         Uri.parse(
           "$baseUrl$costPath/$costId",
         ),
-        headers: {"Content-Type": "application/json"},
+        headers: await _getHeaders(),
       );
 
       if (response.statusCode == 204) {
@@ -222,7 +239,7 @@ class ApiService {
         Uri.parse(
           "$baseUrl/incomes",
         ),
-        headers: {"Content-Type": "application/json"},
+        headers: await _getHeaders(),
         body: json.encode(body.toJson()),
       );
 
@@ -240,11 +257,11 @@ class ApiService {
     try {
       var response = await http.get(
         Uri.parse("$baseUrl/incomes/$incomeId"),
-        headers: {"Content-Type": "application/json"},
+        headers: await _getHeaders(),
       );
 
       if (response.statusCode == 200) {
-        return IncomeResult.fromJson(json.decode(response.body)).result;
+        return IncomeResult.fromJson(decodeJson(response)).result;
       } else {}
     } catch (e) {
       log(e.toString());
@@ -261,7 +278,7 @@ class ApiService {
         Uri.parse(
           "$baseUrl/incomes/$incomeId",
         ),
-        headers: {"Content-Type": "application/json"},
+        headers: await _getHeaders(),
         body: json.encode(body.toJson()),
       );
 
@@ -283,7 +300,7 @@ class ApiService {
         Uri.parse(
           "$baseUrl/incomes/$imcomeId",
         ),
-        headers: {"Content-Type": "application/json"},
+        headers: await _getHeaders(),
       );
 
       if (response.statusCode == 204) {
@@ -303,7 +320,7 @@ class ApiService {
         Uri.parse(
           "$baseUrl/exchange",
         ),
-        headers: {"Content-Type": "application/json"},
+        headers: await _getHeaders(),
         body: json.encode(body.toJson()),
       );
 
@@ -325,7 +342,7 @@ class ApiService {
         Uri.parse(
           "$baseUrl/exchange/$exchangeId",
         ),
-        headers: {"Content-Type": "application/json"},
+        headers: await _getHeaders(),
       );
 
       if (response.statusCode == 204) {
@@ -347,7 +364,7 @@ class ApiService {
     try {
       var response = await http.post(
         Uri.parse("$baseUrl/costs/shortcuts"),
-        headers: {"Content-Type": "application/json"},
+        headers: await _getHeaders(),
         body: json.encode(body.toJson()),
       );
 
@@ -367,10 +384,10 @@ class ApiService {
   Future<List<CostShortcut>?> fetchCostShortcuts() async {
     try {
       var url = Uri.parse("$baseUrl/costs/shortcuts");
-      var response = await http.get(url);
+      var response = await http.get(url, headers: await _getHeaders());
 
       if (response.statusCode == 200) {
-        var results = CostShortcutResults.fromJson(json.decode(response.body));
+        var results = CostShortcutResults.fromJson(decodeJson(response));
         return results.result;
       } else {
         log('Failed to load cost shortcuts');
@@ -389,7 +406,7 @@ class ApiService {
         Uri.parse(
           "$baseUrl/costs/shortcuts/$shortcutId",
         ),
-        headers: {"Content-Type": "application/json"},
+        headers: await _getHeaders(),
         body: json.encode({"value": value}),
       );
 
@@ -402,14 +419,14 @@ class ApiService {
     return false;
   }
 
-  // update user settings
+  // Update user settings
   Future<bool> updateUserConfiguration(UserConfigurationUpdateBody body) async {
     try {
       var response = await http.put(
         Uri.parse(
           "$baseUrl/users/configuration",
         ),
-        headers: {"Content-Type": "application/json"},
+        headers: await _getHeaders(),
         body: json.encode(body.toJson()),
       );
 
@@ -420,5 +437,46 @@ class ApiService {
       log(e.toString());
     }
     return false; // Failed to update
+  }
+
+  // Basic analytics
+  Future<List<Analytics>?> fetchBasicAnalytics(String period) async {
+    try {
+      var url = Uri.parse("$baseUrl/analytics/basic?period=$period");
+      var response = await http.get(url, headers: await _getHeaders());
+
+      if (response.statusCode == 200) {
+        var results = AnalyticsResponse.fromJson(decodeJson(response));
+        return results.result;
+      } else {
+        log('Failed to load basic analytics');
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
+  }
+
+  Future<List<Analytics>?> fetchBasicAnalyticsByRange(
+      DateTime start, DateTime end) async {
+    try {
+      final DateFormat formatter = DateFormat('yyyy-MM-dd');
+      String startDate = formatter.format(start);
+      String endDate = formatter.format(end);
+
+      var url = Uri.parse(
+          "$baseUrl/analytics/basic?startDate=$startDate&endDate=$endDate");
+      var response = await http.get(url, headers: await _getHeaders());
+
+      if (response.statusCode == 200) {
+        var results = AnalyticsResponse.fromJson(decodeJson(response));
+        return results.result;
+      } else {
+        log('Failed to load basic analytics');
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
   }
 }

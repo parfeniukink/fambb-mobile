@@ -153,7 +153,7 @@ class _UpdateCostPageState extends State<UpdateCostPage> {
                                   },
                                   color: CupertinoColors.activeGreen,
                                   child: const Text(
-                                    "submit",
+                                    "confirm",
                                     style: TextStyle(
                                       color: CupertinoColors.white,
                                     ),

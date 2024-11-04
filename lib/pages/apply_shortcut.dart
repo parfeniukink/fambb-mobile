@@ -68,12 +68,8 @@ class _ApplyShortcutPageState extends State<ApplyShortcutPage> {
                                   widget.costShortcut.id, value);
                             },
                             color: CupertinoColors.activeGreen,
-                            child: const Text(
-                              "submit",
-                              style: TextStyle(
-                                color: CupertinoColors.white,
-                              ),
-                            ),
+                            child: const Text("confirm",
+                                style: TextStyle(color: CupertinoColors.white))
                           )
                         ],
                       )

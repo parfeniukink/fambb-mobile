@@ -56,10 +56,18 @@ class _AddCostShortcutPage extends State<AddCostShortcutPage> {
         ? "${defaultCurrency.name} - ${defaultCurrency.sign}"
         : "select currency";
 
+    if (defaultCurrency != null) {
+      currencyId = defaultCurrency.id;
+    }
+
     final CostCategory? defaultCategory =
         widget.user.configuration.defaultCostCategory;
     _selectedCategoryPlaceholder =
         (defaultCategory != null) ? defaultCategory.name : "select category";
+
+    if (defaultCategory != null) {
+      categoryId = defaultCategory.id;
+    }
   }
 
   @override
@@ -83,8 +91,7 @@ class _AddCostShortcutPage extends State<AddCostShortcutPage> {
                             var selectedCurrency =
                                 await showCurrencyActionSheet(context);
 
-                            if (selectedCurrency != null) {
-                              if (!mounted) return;
+                            if (selectedCurrency != null && mounted) {
                               setState(() {
                                 _selectedCurrencyPlaceholder =
                                     selectedCurrency["placeholder"];
@@ -97,10 +104,7 @@ class _AddCostShortcutPage extends State<AddCostShortcutPage> {
                           onPressed: () async {
                             var selectedCategory =
                                 await showCategoryActionSheet(context);
-                            if (!mounted) return;
-
-                            if (selectedCategory != null) {
-                              if (!mounted) return;
+                            if (selectedCategory != null && mounted) {
                               setState(() {
                                 _selectedCategoryPlaceholder =
                                     selectedCategory.name;
@@ -149,18 +153,20 @@ class _AddCostShortcutPage extends State<AddCostShortcutPage> {
                                 vertical: 10, horizontal: 20),
                             onPressed: () async {
                               Navigator.pop(context);
-                              await ApiService().addCostShortcut(
-                                CostShortcutCreateBody(
-                                  name: name,
-                                  value: value,
-                                  currencyId: currencyId,
-                                  categoryId: categoryId,
-                                ),
-                              );
+                              if (mounted) {
+                                await ApiService().addCostShortcut(
+                                  CostShortcutCreateBody(
+                                    name: name,
+                                    value: value,
+                                    currencyId: currencyId,
+                                    categoryId: categoryId,
+                                  ),
+                                );
+                              }
                             },
                             color: CupertinoColors.activeGreen,
                             child: const Text(
-                              "submit",
+                              "confirm",
                               style: TextStyle(
                                 color: CupertinoColors.white,
                               ),

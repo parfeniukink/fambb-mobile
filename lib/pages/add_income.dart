@@ -49,6 +49,10 @@ class _AddIncomePageState extends State<AddIncomePage> {
     _selectedCurrencyPlaceholder = (defaultCurrency != null)
         ? "${defaultCurrency.name} - ${defaultCurrency.sign}"
         : "select currency";
+
+    if (defaultCurrency != null) {
+      currencyId = defaultCurrency.id;
+    }
   }
 
   @override
@@ -151,7 +155,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
                             },
                             color: CupertinoColors.activeGreen,
                             child: const Text(
-                              "submit",
+                              "confirm",
                               style: TextStyle(
                                 color: CupertinoColors.white,
                               ),

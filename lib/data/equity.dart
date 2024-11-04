@@ -21,7 +21,7 @@ class EquityResults {
 @JsonSerializable()
 class Equity {
   final Currency currency;
-  final int amount;
+  final double amount;
 
   Equity({
     required this.currency,

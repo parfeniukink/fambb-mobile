@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:fambb_mobile/data/api.dart';
 import 'package:fambb_mobile/data/cost.dart';
 import 'package:fambb_mobile/data/currency.dart';
@@ -79,7 +77,7 @@ class _SettingsPageState extends State<SettingsPage> {
               CupertinoButton(
                   child: Text(
                     _selectedCostCategoryPlaceholder ??
-                        "- select default cost category",
+                        "select default cost category",
                     textAlign: TextAlign.left,
                   ),
                   onPressed: () async {
@@ -89,7 +87,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     if (selectedCategory != null && mounted) {
                       setState(() {
                         _selectedCostCategoryPlaceholder =
-                            selectedCategory.name;
+                            "default cost category is $selectedCategory.name";
                         defaultCostCategoryId = selectedCategory.id;
                       });
                     }

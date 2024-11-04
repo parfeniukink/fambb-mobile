@@ -52,6 +52,11 @@ class _ExchangeCreatePageState extends State<ExchangeCreatePage> {
     _selectedToCurrencyPlaceholder = (defaultCurrency != null)
         ? "${defaultCurrency.name} - ${defaultCurrency.sign}"
         : "to currency";
+
+    if (defaultCurrency != null) {
+      fromCurrencyId = defaultCurrency.id;
+      toCurrencyId = defaultCurrency.id;
+    }
   }
 
   @override
@@ -157,7 +162,7 @@ class _ExchangeCreatePageState extends State<ExchangeCreatePage> {
                             },
                             color: CupertinoColors.activeGreen,
                             child: const Text(
-                              "submit",
+                              "confirm",
                               style: TextStyle(
                                 color: CupertinoColors.white,
                               ),

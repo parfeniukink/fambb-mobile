@@ -4,6 +4,7 @@ import 'package:fambb_mobile/pages/last_transactions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fambb_mobile/data/equity.dart';
 import 'package:fambb_mobile/data/currency.dart';
+import 'package:fambb_mobile/domain/services.dart';
 
 class EquitySection extends StatelessWidget {
   final List<Equity> equityData;
@@ -39,10 +40,10 @@ class EquitySection extends StatelessWidget {
               );
             },
             child: Text(
-              "${item.amount.toStringAsFixed(2)}${item.currency.sign}",
+              "${formatAmount(item.amount)} ${item.currency.sign}",
               style: const TextStyle(
-                fontWeight: FontWeight.w700,
-                color: CupertinoColors.white,
+                fontWeight: FontWeight.w500,
+                // color: CupertinoColors.activeBlue,
                 fontStyle: FontStyle.italic,
               ),
             ),

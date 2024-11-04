@@ -4,6 +4,7 @@ import 'package:fambb_mobile/data/cost.dart';
 import 'package:fambb_mobile/widgets/section.dart';
 import 'package:fambb_mobile/data/api.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fambb_mobile/widgets/popup.dart';
 
 class AddCostPage extends StatefulWidget {
   final User user;
@@ -57,10 +58,18 @@ class _AddCostPageState extends State<AddCostPage> {
         ? "${defaultCurrency.name} - ${defaultCurrency.sign}"
         : "select currency";
 
+    if (defaultCurrency != null) {
+      currencyId = defaultCurrency.id;
+    }
+
     final CostCategory? defaultCategory =
         widget.user.configuration.defaultCostCategory;
     _selectedCategoryPlaceholder =
         (defaultCategory != null) ? defaultCategory.name : "select category";
+
+    if (defaultCategory != null) {
+      categoryId = defaultCategory.id;
+    }
   }
 
   @override
@@ -97,8 +106,7 @@ class _AddCostPageState extends State<AddCostPage> {
                             var selectedCurrency =
                                 await showCurrencyActionSheet(context);
 
-                            if (selectedCurrency != null) {
-                              if (!mounted) return;
+                            if (selectedCurrency != null && mounted) {
                               setState(() {
                                 _selectedCurrencyPlaceholder =
                                     selectedCurrency["placeholder"];
@@ -111,10 +119,8 @@ class _AddCostPageState extends State<AddCostPage> {
                           onPressed: () async {
                             var selectedCategory =
                                 await showCategoryActionSheet(context);
-                            if (!mounted) return;
 
-                            if (selectedCategory != null) {
-                              if (!mounted) return;
+                            if (selectedCategory != null && mounted) {
                               setState(() {
                                 _selectedCategoryPlaceholder =
                                     selectedCategory.name;
@@ -165,12 +171,8 @@ class _AddCostPageState extends State<AddCostPage> {
                               acceptCallback(context);
                             },
                             color: CupertinoColors.activeGreen,
-                            child: const Text(
-                              "submit",
-                              style: TextStyle(
-                                color: CupertinoColors.white,
-                              ),
-                            ),
+                            child: const Text("confirm",
+                                style: TextStyle(color: CupertinoColors.white)),
                           )
                         ],
                       )
@@ -184,15 +186,24 @@ class _AddCostPageState extends State<AddCostPage> {
   }
 
   Future<bool> acceptCallback(BuildContext context) async {
-    return await ApiService().addCost(
-      CostCreateBody(
-        name: name,
-        value: value,
-        timestamp: date,
-        currencyId: currencyId,
-        categoryId: categoryId,
-      ),
-    );
+    if (mounted) {
+      return await ApiService().addCost(
+        CostCreateBody(
+          name: name,
+          value: value,
+          timestamp: date,
+          currencyId: currencyId,
+          categoryId: categoryId,
+        ),
+      );
+    } else {
+      showPopup(
+        context,
+        color: CupertinoColors.systemRed,
+        message: "not saved",
+      );
+      return false;
+    }
   }
 
   // show currencies as `Map`.

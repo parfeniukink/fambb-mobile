@@ -2,7 +2,9 @@ import 'package:fambb_mobile/pages/analytics.dart';
 import 'package:fambb_mobile/pages/home.dart';
 import 'package:fambb_mobile/pages/settings.dart';
 import 'package:fambb_mobile/pages/shortcuts.dart';
+import 'package:fambb_mobile/pages/authorization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() => runApp(const App());
 
@@ -62,6 +64,12 @@ class _RootPageState extends State<RootPage> {
 class App extends StatelessWidget {
   const App({super.key});
 
+  Future<bool> _isAuthenticated() async {
+    const storage = FlutterSecureStorage();
+    final secret = await storage.read(key: "userSecret");
+    return secret != null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoApp(
@@ -87,7 +95,18 @@ class App extends StatelessWidget {
           ),
         ),
       ),
-      home: const RootPage(),
+      home: FutureBuilder(
+        future: _isAuthenticated(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CupertinoActivityIndicator();
+          }
+          if (snapshot.data == true) {
+            return const RootPage();
+          }
+          return const AuthPage();
+        },
+      ),
       builder: (context, child) {
         return DefaultTextStyle(
           style: const TextStyle(
