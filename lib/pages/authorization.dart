@@ -2,6 +2,7 @@
 // the main.dart but didn't test it. you just added the `FlutterSecureStorage`. start
 // from testing it. it is used to pass the data from place to place.
 
+import 'package:fambb_mobile/pages/home.dart';
 import 'package:fambb_mobile/widgets/popup.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -64,14 +65,21 @@ class _AuthPageState extends State<AuthPage> {
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 color: CupertinoColors.activeBlue,
                 onPressed: () async {
-                  _storage.write(key: "userSecret", value: secret);
+                  await _storage.write(key: "userSecret", value: secret);
                   User? user = await api.fetchUser();
 
-                  if (context.mounted && user == null) {
-                    showPopup(context,
-                        color: CupertinoColors.destructiveRed,
-                        message: "Invalid secret");
-                  } else {}
+                  if (user == null) {
+                    if (context.mounted) {
+                      showPopup(context,
+                          color: CupertinoColors.destructiveRed,
+                          message: "Invalid secret");
+                    }
+                  } else {
+                    if (context.mounted) {
+                      Navigator.of(context).pushReplacement(
+                          CupertinoPageRoute(builder: (_) => const HomePage()));
+                    }
+                  }
                 },
                 child: const Text(
                   "verify",
