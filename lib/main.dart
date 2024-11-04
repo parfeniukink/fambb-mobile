@@ -1,12 +1,18 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fambb_mobile/pages/analytics.dart';
 import 'package:fambb_mobile/pages/home.dart';
 import 'package:fambb_mobile/pages/settings.dart';
 import 'package:fambb_mobile/pages/shortcuts.dart';
 import 'package:fambb_mobile/pages/authorization.dart';
+import 'package:fambb_mobile/data/user.dart';
+import 'package:fambb_mobile/data/api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-void main() => runApp(const App());
+Future<void> main() async {
+  await dotenv.load(fileName: ".env");
+  return runApp(const App());
+}
 
 class RootPage extends StatefulWidget {
   const RootPage({super.key});
@@ -67,7 +73,19 @@ class App extends StatelessWidget {
   Future<bool> _isAuthenticated() async {
     const storage = FlutterSecureStorage();
     final secret = await storage.read(key: "userSecret");
-    return secret != null;
+
+    if (secret == null) {
+      return false;
+    }
+
+    // Verify secret with backend
+    User? user = await ApiService().fetchUser();
+    if (user == null) {
+      // Clear storage if the secret is invalid
+      await storage.delete(key: "userSecret");
+      return false;
+    }
+    return true;
   }
 
   @override

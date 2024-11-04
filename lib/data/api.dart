@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:intl/intl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:fambb_mobile/data/exchange.dart';
 import 'package:fambb_mobile/data/income.dart';
@@ -13,7 +14,6 @@ import 'package:fambb_mobile/data/user.dart';
 import 'package:fambb_mobile/data/analytics.dart';
 import 'package:fambb_mobile/data/cost.dart';
 
-const String baseUrl = "http://localhost:8000";
 const String usersPath = "/users";
 const String currenciesPath = "/currencies";
 const String costCategoriesPath = "/costs/categories";
@@ -23,12 +23,17 @@ const String analyticsTransactionsPath = "/analytics/transactions";
 
 class ApiService {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  String baseUrl = dotenv.env['API_BASE_URL']!;
 
   Future<Map<String, String>> _getHeaders() async {
     final secret = await _storage.read(key: 'userSecret');
+    if (secret == null) {
+      throw Error();
+    }
+
     return {
       "Content-Type": "application/json",
-      if (secret != null) "Authorization": "Bearer $secret",
+      "Authorization": "Bearer $secret"
     };
   }
 
