@@ -121,7 +121,7 @@ class _UpdateCostPageState extends State<UpdateCostPage> {
                               placeholder: (value != null)
                                   ? value.toString()
                                   : "loading",
-                              keyboardType: TextInputType.number,
+                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
                               onChanged: (value) {
                                 setState(() {
                                   this.value = double.tryParse(value) ?? 0.0;

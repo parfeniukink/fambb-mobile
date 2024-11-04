@@ -124,7 +124,7 @@ class _AddCostShortcutPage extends State<AddCostShortcutPage> {
                       const SizedBox(height: 20),
                       CupertinoTextField(
                         placeholder: "value",
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         onChanged: (String? value) {
                           setState(() {
                             this.value =

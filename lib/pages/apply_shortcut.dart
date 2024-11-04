@@ -36,7 +36,7 @@ class _ApplyShortcutPageState extends State<ApplyShortcutPage> {
                     children: [
                       CupertinoTextField(
                         placeholder: "value",
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         onChanged: (value) {
                           setState(() {
                             this.value = double.tryParse(value) ?? 0.0;

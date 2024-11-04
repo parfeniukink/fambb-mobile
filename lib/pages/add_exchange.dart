@@ -120,7 +120,7 @@ class _ExchangeCreatePageState extends State<ExchangeCreatePage> {
                       const SizedBox(height: 20),
                       CupertinoTextField(
                         placeholder: "from value",
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         onChanged: (value) {
                           setState(() {
                             fromValue = double.tryParse(value) ?? 0.0;
@@ -130,7 +130,7 @@ class _ExchangeCreatePageState extends State<ExchangeCreatePage> {
                       const SizedBox(height: 20),
                       CupertinoTextField(
                         placeholder: "to value",
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         onChanged: (value) {
                           setState(() {
                             toValue = double.tryParse(value) ?? 0.0;

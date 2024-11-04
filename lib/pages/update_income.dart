@@ -120,7 +120,7 @@ class _UpdateIncomePageState extends State<UpdateIncomePage> {
                               placeholder: (value != null)
                                   ? value.toString()
                                   : "loading",
-                              keyboardType: TextInputType.number,
+                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
                               onChanged: (value) {
                                 setState(() {
                                   this.value = double.tryParse(value) ?? 0.0;

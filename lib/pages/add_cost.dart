@@ -140,7 +140,7 @@ class _AddCostPageState extends State<AddCostPage> {
                       const SizedBox(height: 20),
                       CupertinoTextField(
                         placeholder: "value",
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         onChanged: (value) {
                           setState(() {
                             this.value = double.tryParse(value) ?? 0.0;
