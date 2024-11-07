@@ -403,6 +403,26 @@ class ApiService {
     return null;
   }
 
+  // Delete shortcut by its id
+  Future<bool> deleteCostShortcut(int shortcutId) async {
+    try {
+      var response = await http.delete(
+        Uri.parse("$baseUrl/costs/shortcuts/$shortcutId"),
+        headers: await _getHeaders(),
+      );
+
+      if (response.statusCode == 204) {
+        log('Cost shortcut deleted successfully');
+        return true;
+      } else {
+        log('Failed to delete cost shortcut. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return false;
+  }
+
   // Apply selected cost shortcut
   // -----------------------------------------
   Future<bool> applyCostShortcut(int shortcutId, double? value) async {

@@ -42,27 +42,31 @@ class _ShortcutsPageState extends State<ShortcutsPage> {
             SliverPadding(
               padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
               sliver: SliverToBoxAdapter(
-                  child: Row(
-                children: [
-                  const Text(
-                    "💰 Cost Shortcuts",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                  ),
-                  const Spacer(),
-                  CupertinoButton(
+                child: Row(
+                  children: [
+                    const Text(
+                      "💰 Cost Shortcuts",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                    ),
+                    const Spacer(),
+                    CupertinoButton(
                       onPressed: () => Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (context) => AddCostShortcutPage(
-                                      user: user!,
-                                      currencies: currencies!,
-                                      costCategories: costCategories!,
-                                    )),
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => AddCostShortcutPage(
+                            user: user!,
+                            currencies: currencies!,
+                            costCategories: costCategories!,
                           ),
+                        ),
+                      ),
                       padding: EdgeInsets.zero,
-                      child: const Icon(CupertinoIcons.add))
-                ],
-              )),
+                      child: const Icon(CupertinoIcons.add),
+                    ),
+                  ],
+                ),
+              ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 26)),
             SliverPadding(
@@ -78,9 +82,7 @@ class _ShortcutsPageState extends State<ShortcutsPage> {
   Widget _buildCostShortcutGrid() {
     if (_costShortcuts == null) {
       return const SliverToBoxAdapter(
-        child: Center(
-          child: CupertinoActivityIndicator(),
-        ),
+        child: Center(child: CupertinoActivityIndicator()),
       );
     }
 
@@ -92,8 +94,10 @@ class _ShortcutsPageState extends State<ShortcutsPage> {
       ),
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          return CostShortcutCard(
-            shortcut: _costShortcuts![index], // Adjust based on your data
+          return GestureDetector(
+            onLongPress: () =>
+                _showShortcutActions(context, _costShortcuts![index]),
+            child: CostShortcutCard(shortcut: _costShortcuts![index]),
           );
         },
         childCount: _costShortcuts!.length,
@@ -136,6 +140,35 @@ class _ShortcutsPageState extends State<ShortcutsPage> {
     if (results != null && mounted) {
       setState(() {
         costCategories = results;
+      });
+    }
+  }
+
+  Future<void> _showShortcutActions(
+      BuildContext context, CostShortcut shortcut) async {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoActionSheet(actions: [
+          CupertinoActionSheetAction(
+            isDestructiveAction: true,
+            child: const Text("delete"),
+            onPressed: () async {
+              Navigator.pop(context);
+              await _deleteCostShortcut(shortcut.id);
+            },
+          ),
+        ]);
+      },
+    );
+  }
+
+  Future<void> _deleteCostShortcut(int shortcutId) async {
+    bool success = await api.deleteCostShortcut(shortcutId);
+    if (success && mounted) {
+      setState(() {
+        _costShortcuts =
+            _costShortcuts!.where((s) => s.id != shortcutId).toList();
       });
     }
   }
