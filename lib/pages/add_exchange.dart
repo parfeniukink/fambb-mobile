@@ -120,20 +120,26 @@ class _ExchangeCreatePageState extends State<ExchangeCreatePage> {
                       const SizedBox(height: 20),
                       CupertinoTextField(
                         placeholder: "from value",
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
                         onChanged: (value) {
                           setState(() {
-                            fromValue = double.tryParse(value) ?? 0.0;
+                            fromValue =
+                                double.tryParse(value.replaceAll(",", ".")) ??
+                                    0.0;
                           });
                         },
                       ),
                       const SizedBox(height: 20),
                       CupertinoTextField(
                         placeholder: "to value",
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
                         onChanged: (value) {
                           setState(() {
-                            toValue = double.tryParse(value) ?? 0.0;
+                            toValue =
+                                double.tryParse(value.replaceAll(",", ".")) ??
+                                    0.0;
                           });
                         },
                       ),

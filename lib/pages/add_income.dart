@@ -123,10 +123,11 @@ class _AddIncomePageState extends State<AddIncomePage> {
                       const SizedBox(height: 20),
                       CupertinoTextField(
                         placeholder: "value",
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
                         onChanged: (value) {
                           setState(() {
-                            this.value = double.tryParse(value) ?? 0.0;
+                            this.value = double.tryParse(value.replaceAll(",", ".")) ?? 0.0;
                           });
                         },
                       ),

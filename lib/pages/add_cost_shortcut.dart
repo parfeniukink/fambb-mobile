@@ -128,7 +128,7 @@ class _AddCostShortcutPage extends State<AddCostShortcutPage> {
                         onChanged: (String? value) {
                           setState(() {
                             this.value =
-                                (value != null) ? double.tryParse(value) : null;
+                                (value != null) ? double.tryParse(value.replaceAll(",", ".")) : null;
                           });
                         },
                       ),

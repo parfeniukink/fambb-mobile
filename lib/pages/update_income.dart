@@ -120,10 +120,14 @@ class _UpdateIncomePageState extends State<UpdateIncomePage> {
                               placeholder: (value != null)
                                   ? value.toString()
                                   : "loading",
-                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
                               onChanged: (value) {
                                 setState(() {
-                                  this.value = double.tryParse(value) ?? 0.0;
+                                  this.value = double.tryParse(
+                                          value.replaceAll(",", ".")) ??
+                                      0.0;
                                 });
                               },
                             ),

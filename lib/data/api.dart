@@ -156,6 +156,7 @@ class ApiService {
   // Returns `false` if not created
   Future<bool> addCost(CostCreateBody costCreateBody) async {
     try {
+      print(costCreateBody.toJson());
       var response = await http.post(
         Uri.parse(
           "$baseUrl$costPath",
