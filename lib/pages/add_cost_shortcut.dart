@@ -124,11 +124,13 @@ class _AddCostShortcutPage extends State<AddCostShortcutPage> {
                       const SizedBox(height: 20),
                       CupertinoTextField(
                         placeholder: "value",
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
                         onChanged: (String? value) {
                           setState(() {
-                            this.value =
-                                (value != null) ? double.tryParse(value.replaceAll(",", ".")) : null;
+                            this.value = (value != null)
+                                ? double.tryParse(value.replaceAll(",", "."))
+                                : null;
                           });
                         },
                       ),
