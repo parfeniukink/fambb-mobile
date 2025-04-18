@@ -1,4 +1,3 @@
-// import 'package:fambb_mobile/data/api.dart';
 import 'package:fambb_mobile/pages/apply_shortcut.dart';
 import 'package:fambb_mobile/widgets/popup.dart';
 import 'package:flutter/cupertino.dart';

@@ -4,7 +4,11 @@ run:
 
 .PHONY: build
 build:
-	flutter build ios
+	flutter build ios --release
+
+.PHONY: deploy
+deploy:
+	flutter install
 
 # NOTE: ***********************************************
 # Update the .freezed and .g files for all the entities

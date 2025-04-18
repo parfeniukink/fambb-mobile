@@ -24,7 +24,6 @@ const String analyticsTransactionsPath = "/analytics/transactions";
 class ApiService {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
   String baseUrl = dotenv.env['API_BASE_URL']!;
-
   Future<Map<String, String>> _getHeaders() async {
     final secret = await _storage.read(key: 'userSecret');
     if (secret == null) {
